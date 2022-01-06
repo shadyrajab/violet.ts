@@ -1,0 +1,84 @@
+{   
+    "Violet's Best Friend <3": {
+        "badgeID": "922557918128254977",
+        "badgeIcon": "https://i.imgur.com/4L33z5h.png",
+        "badgeColor": "0xcc07ae",
+        "badgeFooter": "https://i.imgur.com/ez7E2B3.png",
+        "badgeType": "Classic",
+        "description": {
+            "portuguese": "Um pequeno presente para meus queridos amiguinhos que compartilharam algo comigo <3",
+            "english": "A little gift for my dear friends that share something with me <3"
+        },
+        "negociable": true
+    },
+    "Beta Tester": {
+        "badgeID": "923256176165146634",
+        "badgeIcon": "https://i.imgur.com/tgZOJjf.png",
+        "badgeColor": "0xa64451",
+        "badgeFooter": "https://i.imgur.com/s7l3hhW.png",
+        "badgeType": "Mitic",
+        "description": {
+            "portuguese": "Essa Insígnia foi dada à todos que utilizaram o bot durante sua fase beta.",
+            "english": "This Badge was gived to everyone that used the bot while beta."
+        },
+        "negociable": true
+    },
+    "Challenger": {
+        "badgeID": "921177953214300190",
+        "badgeIcon": "https://i.imgur.com/LnYraQ4.png",
+        "badgeColor": "0x2596be",
+        "badgeFooter": "https://i.imgur.com/kspStKQ.png",
+        "badgeType": "Mitic",
+        "description": {
+            "portuguese": "Essa Insígnia foi dada àqueles que alcançaram o elo Desafiante na season 12 do League of Legends.",
+            "english": "This badge was gived to those ones reached the Challenger tier in League of Legends season 12."
+        },
+        "negociable": false
+    },
+    "The Magnata of Violets": {
+        "badgeID": "",
+        "badgeIcon": "",
+        "badgeColor": "",
+        "badgeType": "Legendary",
+        "description": {
+            "portuguese": "Isso pertence ao cara mais rico deste mundo! Vaza daqui, plebeu!",
+            "english": "This belongs to the most rich man in this world! Get out of here, plebs!"
+        },
+        "negociable": false
+    },
+    "Open source contributor": {
+        "badgeID": "922557918128254977",
+        "badgeIcon": "https://i.imgur.com/vWkOFYj.png",
+        "badgeColor": "0x8406dc",
+        "badgeFooter": "https://i.imgur.com/209Y0UI.png",
+        "badgeType": "Mitic",
+        "description": {
+            "portuguese": "Essa Insígnia foi dada à quem contribuiu para o projeto da Violet no [GitHub](https://github.com/shadyrajab/violet.js).",
+            "english": "This Badge was gived to the ones that contribute to Violet's project on [GitHub](https://github.com/shadyrajab/violet.js)"
+        },
+        "negociable": true
+    },
+    "Translator": {
+        "badgeID": "923314020440764446",  
+        "badgeIcon": "https://i.imgur.com/hRM44pv.png",
+        "badgeColor": "0xffffff",
+        "badgeFooter": "https://i.imgur.com/4rVU8Un.png",
+        "badgeType": "Mitic",
+        "description": {
+            "portuguese": "Essa Insígnia foi dada à quem ajudou na tradução da Violet para qualquer língua.",
+            "english": "This badge was gived to the ones that contributes in Violet's translation in any language."
+        },
+        "negociable": true
+    },
+    "Bug Hunter": {
+        "badgeID": "",
+        "badgeIcon": "",
+        "badgeColor": "",
+        "badgeType": "Mitic",
+        "description": {
+            "portuguese": "Um agradinho da Violet para quem identificou e ajudou a resolver algum bug.",
+            "english": "A gift from Violet to the ones that identify and help to resolve some bug."
+        },
+        "negociable": false
+    }
+}
