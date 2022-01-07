@@ -4,7 +4,7 @@
         "es2021": true
     },
     "extends": [
-        "airbnb-base",
+        "google",
         "plugin:import/typescript"
     ],
     "parser": "@typescript-eslint/parser",
@@ -13,7 +13,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "import"
     ],
     "rules": {
         "import/extensions": [
@@ -25,6 +26,8 @@
              "ts": "never",
              "tsx": "never"
            }
-        ]
+        ],
+        "max-len": "off",
+        "require-jsdoc": 0
     }
 }
