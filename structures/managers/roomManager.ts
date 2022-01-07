@@ -1,8 +1,8 @@
 import {
-  GuildMember, Role, User, VoiceBasedChannel,
+  GuildMember, Role, User, VoiceBasedChannel, VoiceChannel,
 } from 'discord.js';
-import { roomScheme } from '../../database/schemes/roomScheme';
-import { ChannelMethods } from '../structures/types';
+import {roomScheme} from '../../database/schemes/roomScheme';
+import {ChannelMethods} from '../structures/types';
 
 interface ManageData {
     method: ChannelMethods,
@@ -12,11 +12,11 @@ interface ManageData {
 }
 
 export class Room {
-  public channel: VoiceBasedChannel;
+  public channel: VoiceChannel | VoiceBasedChannel;
 
   public user?: User;
 
-  constructor(channel: VoiceBasedChannel, user?: User) {
+  constructor(channel: VoiceChannel | VoiceBasedChannel, user?: User) {
     this.channel = channel;
     this.user = user;
   }
@@ -31,50 +31,52 @@ export class Room {
   }
 
   async delete() {
-    await roomScheme.deleteOne({ channelId: this.channel.id });
+    await roomScheme.deleteOne({channelId: this.channel.id});
   }
 
   async isOwner(member: User | GuildMember) {
-    const room = await roomScheme.findOne({ channelId: this.channel.id });
+    const room = await roomScheme.findOne({channelId: this.channel.id});
     const isOwner = (room.owner === member.id);
     return isOwner;
   }
 
   async addAdmin(user: User | GuildMember | Role) {
-    const room = await roomScheme.findOne({ channelId: this.channel.id });
+    const room = await roomScheme.findOne({channelId: this.channel.id});
     room.admins.push(user.id);
     await room.save().catch((err: Error) => console.log(err));
   }
 
   async removeAdmin(user: User | GuildMember | Role) {
-    const room = await roomScheme.findOne({ channelId: this.channel.id });
+    const room = await roomScheme.findOne({channelId: this.channel.id});
     room.admins.splice(room.admins.indexOf(user.id));
     await room.save().catch((err: Error) => console.log(err));
   }
 
   async isAdmin(member: User | GuildMember | Role) {
-    const room = await roomScheme.findOne({ channelId: this.channel.id });
+    const room = await roomScheme.findOne({channelId: this.channel.id});
     const isAdmin = (!!room.admins.find((admin: string) => admin === member.id));
     return isAdmin;
   }
 
-  static async isRoom(channel: VoiceBasedChannel) {
-    const room = await roomScheme.findOne({ channelId: channel.id });
+  static async isRoom(channel: VoiceChannel | VoiceBasedChannel) {
+    const room = await roomScheme.findOne({channelId: channel.id});
     const isRoom = !!(room);
     return isRoom;
   }
 
   static async checkRooms(user: User | GuildMember) {
-    const rooms = await roomScheme.find({ owner: user.id });
+    const rooms = await roomScheme.find({owner: user.id});
     let len = 1;
-    for (const _room in rooms) len += 1;
+    rooms.forEach(() => {
+      len += 1;
+    });
     return len > 2;
   }
 
   async manage({
     method, role, name, members,
   }: ManageData) {
-    const { channel } = this;
+    const {channel} = this;
     if (members && members.length) {
       for (const member of members) {
         if (method === 'ADD_MEMBER') {
@@ -96,11 +98,11 @@ export class Room {
           });
         }
         if (method === 'BLOCK_MEMBER') {
-          if (member instanceof GuildMember && member.voice && member.voice.channel === channel) member.edit({ channel: null });
+          if (member instanceof GuildMember && member.voice && member.voice.channel === channel) member.edit({channel: null});
           if (member instanceof Role) {
             for (const channelMember of channel.members) {
               channelMember.reduce((_id, user) => {
-                if (user instanceof GuildMember && user.roles.cache.get(member.id)) user.edit({ channel: null });
+                if (user instanceof GuildMember && user.roles.cache.get(member.id)) user.edit({channel: null});
                 return user;
               });
             }
@@ -144,6 +146,6 @@ export class Room {
           VIEW_CHANNEL: null,
         });
       }
-    } else if (name && method === 'RENAME') channel.edit({ name });
+    } else if (name && method === 'RENAME') channel.edit({name});
   }
 }
