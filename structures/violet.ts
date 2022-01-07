@@ -1,6 +1,6 @@
-import { Client, Intents } from 'discord.js';
+import {Client, Intents} from 'discord.js';
 import mongoose from 'mongoose';
-import { fetchClientGuilds } from '../utils/fetchFunctions';
+import {fetchClientGuilds} from '../utils/fetchFunctions';
 import getCommands from '../handler/commandHandler';
 import interaction from '../events/interactionCreate';
 import channelcreation from '../events/channelCreation';
@@ -24,13 +24,13 @@ channelcreation(client);
 client.on('ready', (client) => {
   const guildsCount = client.guilds.cache.size;
   const usersCount = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
-  client.user.setPresence({ activities: [{ name: 'use /getbadge' }], status: 'idle' });
+  client.user.setPresence({activities: [{name: 'use /getbadge'}], status: 'idle'});
   client.application.commands.set(commands);
-  // fetchClientGuilds(guildsCount)
+  fetchClientGuilds(guildsCount);
   console.log(`${client.user.username} is online in ${guildsCount} servers with ${usersCount} users.`);
 });
 client.login(process.env.TOKEN as string);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.CONNECTION as string)
-  .catch((err: Error) => console.log(`Error while connection: ${err}`));
+    .catch((err: Error) => console.log(`Error while connection: ${err}`));
