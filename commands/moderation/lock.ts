@@ -1,8 +1,8 @@
 import {
   CategoryChannel, Client, TextChannel, VoiceChannel,
 } from 'discord.js';
-import { Command } from '../../structures/structures/command';
-import { lockReply, unlockReply, unsuportedChannel } from '../../translations/moderation/lockMessages';
+import {Command} from '../../structures/structures/command';
+import {lockReply, unlockReply, unsuportedChannel} from '../../translations/moderation/lockMessages';
 
 export class Lock extends Command {
   constructor(client: Client) {
@@ -21,18 +21,13 @@ export class Lock extends Command {
 
       execute: async (interaction, language) => {
         const channel = interaction.options.getChannel('channel') || interaction.channel;
-        const { everyone } = interaction.guild!.roles;
-        if (channel instanceof CategoryChannel) {
-          channel.permissionOverwrites.edit(everyone, {
-            SEND_MESSAGES: false,
-          });
-        }
+        const {everyone} = interaction.guild!.roles;
         if (channel instanceof VoiceChannel) {
           channel.permissionOverwrites.edit(everyone, {
             CONNECT: false,
           });
         }
-        if (channel instanceof TextChannel) {
+        if (channel instanceof TextChannel || channel instanceof CategoryChannel) {
           channel.permissionOverwrites?.edit(everyone, {
             SEND_MESSAGES: false,
           });
@@ -65,18 +60,13 @@ export class Unlock extends Command {
 
       execute: async (interaction, language) => {
         const channel = interaction.options.getChannel('channel') || interaction.channel;
-        const { everyone } = interaction.guild!.roles;
-        if (channel instanceof CategoryChannel) {
-          channel.permissionOverwrites.edit(everyone, {
-            SEND_MESSAGES: null,
-          });
-        }
+        const {everyone} = interaction.guild!.roles;
         if (channel instanceof VoiceChannel) {
           channel.permissionOverwrites.edit(everyone, {
             CONNECT: null,
           });
         }
-        if (channel instanceof TextChannel) {
+        if (channel instanceof TextChannel || channel instanceof CategoryChannel) {
           channel.permissionOverwrites?.edit(everyone, {
             SEND_MESSAGES: null,
           });
