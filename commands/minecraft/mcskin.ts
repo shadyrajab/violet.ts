@@ -1,14 +1,14 @@
-import { Client } from 'discord.js';
+import {Client} from 'discord.js';
 import fetch from 'cross-fetch';
-import { Command } from '../../structures/structures/command';
-import { userNotFound } from '../../translations/globalMessages';
+import {Command} from '../../structures/structures/command';
+import {userNotFound} from '../../translations/globalMessages';
 
 export class MinecraftSkin extends Command {
   constructor(client: Client) {
     super(new Command({
       client,
 
-      name: 'mcskin',
+      name: 'minecraftskin',
       description: 'Minecraft • Display a minecraft user skin.',
       direct: true,
       options: [{
