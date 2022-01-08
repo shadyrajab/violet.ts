@@ -50,13 +50,13 @@ export class MinecraftProfile extends Command {
               .setAuthor({name: user.name, iconURL: avatar})
               .addField('UUID', user.id)
               .addField('Skin', `[Baixar Skin](${skin})`)
-              .addField(historyName(language), nameHistory, true)
-              .addField(headCommand(language), `**1.13+**\n/give @p minecraft:player_head{SkullOwner:"${user.name}"}\n**1.12-**\n/give @p minecraft:skull 1 3 {SkullOwner:"${user.name}"}`)
-              .setTimestamp(Date.now());
+              .addField(historyName(language), nameHistory, true);
           if (data && time) {
             embed.addField('\u200B', data, true);
             embed.addField('\u200B', time, true);
           }
+          embed.addField(headCommand(language), `**1.13+**\n/give @p minecraft:player_head{SkullOwner:"${user.name}"}\n**1.12-**\n/give @p minecraft:skull 1 3 {SkullOwner:"${user.name}"}`);
+          embed.setTimestamp(Date.now());
           interaction.reply({embeds: [embed]});
         } else {
           interaction.reply({
