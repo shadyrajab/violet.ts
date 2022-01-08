@@ -1,9 +1,9 @@
-import { Client, MessageEmbed } from 'discord.js';
+import {Client, MessageEmbed} from 'discord.js';
 import fetch from 'cross-fetch';
-import { Command } from '../../structures/structures/command';
-import { format } from '../../utils/formatFunctions';
-import { minecraftProfile, headCommand, historyName } from '../../translations/minecraft/mcprofileMessages';
-import { userNotFound } from '../../translations/globalMessages';
+import {Command} from '../../structures/structures/command';
+import {format} from '../../utils/formatFunctions';
+import {minecraftProfile, headCommand, historyName} from '../../translations/minecraft/mcprofileMessages';
+import {userNotFound} from '../../translations/globalMessages';
 
 export class MinecraftProfile extends Command {
   constructor(client: Client) {
@@ -44,18 +44,20 @@ export class MinecraftProfile extends Command {
           const skin = `https://crafatar.com/skins/${user.id}`;
           const skinRender = `https://crafatar.com/renders/body/${user.id}?overlay`;
           const embed = new MessageEmbed()
-            .setThumbnail(skinRender)
-            .setDescription(minecraftProfile(language))
-            .setColor(0x2f3136)
-            .setAuthor({ name: user.name, iconURL: avatar })
-            .addField('UUID', user.id)
-            .addField('Skin', `[Baixar Skin](${skin})`)
-            .addField(historyName(language), nameHistory, true)
-            .addField('\u200B', data, true)
-            .addField('\u200B', time, true)
-            .addField(headCommand(language), `**1.13+**\n/give @p minecraft:player_head{SkullOwner:"${user.name}"}\n**1.12-**\n/give @p minecraft:skull 1 3 {SkullOwner:"${user.name}"}`)
-            .setTimestamp(Date.now());
-          interaction.reply({ embeds: [embed] });
+              .setThumbnail(skinRender)
+              .setDescription(minecraftProfile(language))
+              .setColor(0x2f3136)
+              .setAuthor({name: user.name, iconURL: avatar})
+              .addField('UUID', user.id)
+              .addField('Skin', `[Baixar Skin](${skin})`)
+              .addField(historyName(language), nameHistory, true)
+              .addField(headCommand(language), `**1.13+**\n/give @p minecraft:player_head{SkullOwner:"${user.name}"}\n**1.12-**\n/give @p minecraft:skull 1 3 {SkullOwner:"${user.name}"}`)
+              .setTimestamp(Date.now());
+          if (data && time) {
+            embed.addField('\u200B', data, true);
+            embed.addField('\u200B', time, true);
+          }
+          interaction.reply({embeds: [embed]});
         } else {
           interaction.reply({
             content: userNotFound(language, username),
