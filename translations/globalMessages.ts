@@ -19,7 +19,7 @@ export function permissionsRemoved(language: Language) {
 }
 
 export function finished(language: Language) {
-  if (language === 'portuguese') return 'Prontinho! =D';
-  if (language === 'english') return 'Finished! =D';
+  if (language === 'portuguese') return 'Prontinho! 😊';
+  if (language === 'english') return 'Finished! 😊';
   return 'Finished! =D';
 }
