@@ -13,12 +13,13 @@ export default (client: Client) => {
     const {guild} = newState;
     const {channel} = newState;
     const member = newState.member!;
+    const user = member.user;
     const guildManager = new GuildManager(guild);
-    const profileManager = new ProfileManager(member.user);
+    const profileManager = new ProfileManager(user);
     const language = await profileManager.getLanguage() || await guildManager.getLanguage();
     const {trcategory, trchannel} = await guildManager.getTrChannels();
     if ((trcategory && trchannel && channel) && (channel.id === trchannel.id)) {
-      if (await Room.checkRooms(member.user)) {
+      if (await Room.checkRooms(user)) {
         // If the user have 2 temporary channels created, kick and send him a message
         try {
           member.send(`${member}, ${simultaneousChannel(language)}`);
@@ -26,18 +27,18 @@ export default (client: Client) => {
         member.edit({channel: null});
         return;
       }
-      const presetsManager = new PresetsManager(member.user, guild, client);
+      const presetsManager = new PresetsManager(user, guild, client);
       let channelName = await presetsManager.getChannelName();
-      channelName = (!channelName || channelName === 'default') ? `${member.user.username}'s channel` : channelName;
+      channelName = (!channelName || channelName === 'default') ? `${user.username}'s channel` : channelName;
 
       try {
         const tempChannel = await guild.channels.create(channelName, {
           type: 'GUILD_VOICE',
           parent: trcategory as CategoryChannelResolvable,
-          reason: `Creating a new temporary channel to ${member.user}`,
+          reason: `New tr channel to ${user.username}#${user.discriminator} | ${user.id}`,
         });
         presetsManager.setPresets(tempChannel.permissionOverwrites, member);
-        new Room(tempChannel, member.user).create();
+        new Room(tempChannel, user).create();
         member.edit({channel: tempChannel});
       } catch (err) {
         if (err instanceof DiscordAPIError && err.message === 'Missing Permissions') {

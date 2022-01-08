@@ -23,7 +23,8 @@ export default (client: Client, commands: Array <Command>) => {
   client.on('interactionCreate', async (interaction: Interaction) => {
     if (!interaction.isCommand()) return;
     const {commandName} = interaction;
-    const reason = `🔧 /${commandName}: Requested by: ${interaction.user} | ID: ${interaction.user.id}`;
+    const user = interaction.user;
+    const reason = `🔧 /${commandName}: Requested by: ${user.username}#${user.discriminator} | ${user.id}`;
     const guild = interaction.guild as Guild;
     const member = interaction.member as GuildMember;
     const command = commands.find((command) => command.name === commandName);
