@@ -20,7 +20,7 @@ export class TRDelete extends Command {
         type: 'CHANNEL',
       }],
 
-      execute: async (interaction, language) => {
+      execute: async (interaction, language, reason) => {
         const guildManager = new GuildManager(interaction.guild!);
         const newChannel = interaction.options.getChannel('channel');
         const {trcategory, trchannel} = await guildManager.getTrChannels();
@@ -39,9 +39,9 @@ export class TRDelete extends Command {
           for (const channel of trcategory!.children) {
             const voiceChannel = channel[1];
             if (voiceChannel instanceof VoiceChannel && await Room.isRoom(voiceChannel)) {
-              if (newChannel) for (const member of voiceChannel.members) member[1].edit({channel: newChannel});
+              if (newChannel) for (const member of voiceChannel.members) member[1].edit({channel: newChannel}, reason);
               setTimeout( () => {
-                voiceChannel.delete(`Deleting all the temporary channels. Requested by: ${interaction.user.username}`);
+                voiceChannel.delete(reason);
               }, 3000);
             }
           }

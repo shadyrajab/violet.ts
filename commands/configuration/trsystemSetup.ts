@@ -1,6 +1,6 @@
-import { Client, Guild } from 'discord.js';
-import { Command } from '../../structures/structures/command';
-import { GuildManager } from '../../structures/managers/guildManager';
+import {Client, Guild} from 'discord.js';
+import {Command} from '../../structures/structures/command';
+import {GuildManager} from '../../structures/managers/guildManager';
 import {
   trsetupReply,
   alreadyActivated,
@@ -17,19 +17,19 @@ export class TRSetup extends Command {
       description: 'Configuration • Setup the temporary channels system.',
       permissions: ['ADMINISTRATOR'],
 
-      execute: async (interaction, language) => {
+      execute: async (interaction, language, reason) => {
         const guild = interaction.guild as Guild;
         const guildManager = new GuildManager(guild);
-        const { trcategory, trchannel } = await guildManager.getTrChannels();
+        const {trcategory, trchannel} = await guildManager.getTrChannels();
         if (!trcategory && !trchannel) {
           const category = await guild.channels.create('Temporary Channels', {
             type: 'GUILD_CATEGORY',
-            reason: 'Temporary channels system setup',
+            reason: reason,
           });
           const channel = await guild.channels.create('Join Here', {
             type: 'GUILD_VOICE',
             parent: category,
-            reason: 'Temporary channels system setup',
+            reason: reason,
           });
           await guildManager.trSetup(category.id, channel.id);
           await interaction.reply({
@@ -56,13 +56,13 @@ export class TRDisable extends Command {
       description: 'Configuration • Disable the temporary channels system.',
       permissions: ['ADMINISTRATOR'],
 
-      execute: async (interaction, language) => {
+      execute: async (interaction, language, reason) => {
         const guild = interaction.guild as Guild;
         const guildManager = new GuildManager(guild);
-        const { trcategory, trchannel } = await guildManager.getTrChannels();
+        const {trcategory, trchannel} = await guildManager.getTrChannels();
         if (trcategory && trchannel) {
-          trcategory.delete();
-          trchannel.delete();
+          trcategory.delete(reason);
+          trchannel.delete(reason);
           await guildManager.trSetup(null, null);
           await interaction.reply({
             content: trdisableReply(language),

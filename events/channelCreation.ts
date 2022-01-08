@@ -34,7 +34,7 @@ export default (client: Client) => {
         const tempChannel = await guild.channels.create(channelName, {
           type: 'GUILD_VOICE',
           parent: trcategory as CategoryChannelResolvable,
-          reason: 'Creating a new temporary channel',
+          reason: `Creating a new temporary channel to ${member.user}`,
         });
         presetsManager.setPresets(tempChannel.permissionOverwrites, member);
         new Room(tempChannel, member.user).create();

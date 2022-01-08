@@ -23,7 +23,7 @@ export class Move extends Command {
         type: 'CHANNEL',
       }],
 
-      execute: async (interaction, language) => {
+      execute: async (interaction, language, reason) => {
         const originalChannel = interaction.options.getChannel('originalchannel');
         const newChannel = interaction.options.getChannel('newchannel');
         if (!(newChannel instanceof VoiceChannel || newChannel instanceof StageChannel)) {
@@ -41,10 +41,10 @@ export class Move extends Command {
 
         if (originalChannel instanceof CategoryChannel) {
           for (const channel of originalChannel.children) {
-            for (const member of channel[1].members) member[1].edit({channel: newChannel}, `Moving to ${newChannel.name} | requested by: ${interaction.user.username}`);
+            for (const member of channel[1].members) member[1].edit({channel: newChannel}, reason);
           }
         } else if (originalChannel instanceof VoiceChannel || originalChannel instanceof StageChannel) {
-          for (const member of originalChannel.members) member[1].edit({channel: newChannel}, `Moving to ${newChannel.name} | requested by: ${interaction.user.username}`);
+          for (const member of originalChannel.members) member[1].edit({channel: newChannel}, reason);
         }
         await interaction.reply({
           content: finished(language),
