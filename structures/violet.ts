@@ -2,8 +2,9 @@ import {Client, Intents} from 'discord.js';
 import mongoose from 'mongoose';
 import {fetchClientGuilds} from '../utils/fetchFunctions';
 import getCommands from '../handler/commandHandler';
-import interaction from '../events/interactionCreate';
-import channelcreation from '../events/channelCreation';
+import interactionCreate from '../events/interactionCreate';
+import channelCreate from '../events/channelCreation';
+import channelDelete from '../events/channelDelete';
 
 require('dotenv').config();
 
@@ -18,8 +19,9 @@ const client = new Client({
 
 const commands = getCommands(client);
 
-interaction(client, commands);
-channelcreation(client);
+interactionCreate(client, commands);
+channelCreate(client);
+channelDelete(client);
 
 client.on('ready', (client) => {
   const guildsCount = client.guilds.cache.size;
