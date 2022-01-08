@@ -1,5 +1,5 @@
-import { Client, CommandInteraction, PermissionString } from 'discord.js';
-import { CommandOptions, Language, TRoomPermission } from './types';
+import {Client, CommandInteraction, PermissionString} from 'discord.js';
+import {CommandOptions, Language, TRoomPermission} from './types';
 
 interface CommandData {
     client: Client
@@ -10,7 +10,7 @@ interface CommandData {
     permissions?: Array <PermissionString | TRoomPermission>
     options?: Array <CommandOptions>
 
-    execute: (interaction: CommandInteraction, language: Language) => void
+    execute: (interaction: CommandInteraction, language: Language, reason: string) => void
 }
 
 export class Command implements CommandData {
@@ -26,7 +26,7 @@ export class Command implements CommandData {
 
   public options?: Array <CommandOptions>;
 
-  public execute: (interaction: CommandInteraction, language: Language) => void;
+  public execute: (interaction: CommandInteraction, language: Language, reason: string) => void;
 
   constructor({
     client, name, description, direct, permissions, options, execute,
