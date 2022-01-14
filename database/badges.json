@@ -1,6 +1,6 @@
 {   
     "Violet's Best Friend <3": {
-        "badgeID": "922557918128254977",
+        "badgeID": "929509992510414918",
         "badgeIcon": "https://i.imgur.com/4L33z5h.png",
         "badgeColor": "0xcc07ae",
         "badgeFooter": "https://i.imgur.com/ez7E2B3.png",
@@ -77,7 +77,7 @@
         "badgeType": "Mitic",
         "description": {
             "portuguese": "Um agradinho da Violet para quem identificou e ajudou a resolver algum bug.",
-            "english": "A gift from Violet to the ones that identify and help to resolve some bug."
+            "english": "A gift from Violet to the ones that have identified and helped to solve some bug."
         },
         "negociable": false
     }

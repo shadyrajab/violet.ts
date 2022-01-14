@@ -1,7 +1,9 @@
-import { Client, GuildMember, MessageEmbed } from 'discord.js';
-import { Room } from '../../structures/managers/roomManager';
-import { Command } from '../../structures/structures/command';
-import { trhideReply, trunhideReply } from '../../translations/temporarychannels/trhideMessages';
+import {Client, GuildMember, MessageEmbed} from 'discord.js';
+import {Room} from '../../structures/managers/roomManager';
+import {Command} from '../../structures/structures/command';
+import {trhideReply, trunhideReply} from '../../translations/temporarychannels/trhideMessages';
+
+const {Colors: {grayishPurple}} = require('../../database/utils.json');
 
 export class TRHide extends Command {
   constructor(client: Client) {
@@ -15,16 +17,16 @@ export class TRHide extends Command {
       execute: async (interaction, language) => {
         const member = interaction.member as GuildMember;
         const channel = member.voice.channel!;
-        const { everyone } = interaction.guild!.roles;
+        const {everyone} = interaction.guild!.roles;
         const room = new Room(channel);
-        await room.manage({ method: 'LOCK', role: everyone });
+        await room.manage({method: 'LOCK', role: everyone});
         const embed = new MessageEmbed()
-          .setColor(0x2f3136)
-          .setAuthor({ name: channel.name, iconURL: member.user.avatarURL()! })
-          .addField('\u200B', trhideReply(language))
-          .setTimestamp(Date.now())
-          .setImage('https://i.imgur.com/dnwiwSz.png');
-        interaction.reply({ embeds: [embed], ephemeral: true });
+            .setColor(grayishPurple)
+            .setAuthor({name: channel.name, iconURL: member.user.avatarURL()!})
+            .addField('\u200B', trhideReply(language))
+            .setTimestamp(Date.now())
+            .setImage('https://i.imgur.com/dnwiwSz.png');
+        interaction.reply({embeds: [embed], ephemeral: true});
       },
     }));
   }
@@ -42,16 +44,16 @@ export class TRUnhide extends Command {
       execute: async (interaction, language) => {
         const member = interaction.member as GuildMember;
         const channel = member.voice.channel!;
-        const { everyone } = interaction.guild!.roles;
+        const {everyone} = interaction.guild!.roles;
         const room = new Room(channel);
-        await room.manage({ method: 'LOCK', role: everyone });
+        await room.manage({method: 'LOCK', role: everyone});
         const embed = new MessageEmbed()
-          .setColor(0x2f3136)
-          .setAuthor({ name: channel.name, iconURL: member.user.avatarURL()! })
-          .addField('\u200B', trunhideReply(language))
-          .setTimestamp(Date.now())
-          .setImage('https://i.imgur.com/dnwiwSz.png');
-        interaction.reply({ embeds: [embed], ephemeral: true });
+            .setColor(grayishPurple)
+            .setAuthor({name: channel.name, iconURL: member.user.avatarURL()!})
+            .addField('\u200B', trunhideReply(language))
+            .setTimestamp(Date.now())
+            .setImage('https://i.imgur.com/dnwiwSz.png');
+        interaction.reply({embeds: [embed], ephemeral: true});
       },
     }));
   }

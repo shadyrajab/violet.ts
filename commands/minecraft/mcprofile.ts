@@ -46,7 +46,7 @@ export class MinecraftProfile extends Command {
           const embed = new MessageEmbed()
               .setThumbnail(skinRender)
               .setDescription(minecraftProfile(language))
-              .setColor(0x2f3136)
+              .setColor(0x96879d)
               .setAuthor({name: user.name, iconURL: avatar})
               .addField('UUID', user.id)
               .addField('Skin', `[Baixar Skin](${skin})`)

@@ -14,7 +14,7 @@ export class TRDelete extends Command {
       description: 'Moderation • Delete all the temporary channels created in this server.',
       permissions: ['ADMINISTRATOR'],
       options: [{
-        name: 'channel',
+        name: 'newchannel',
         description: 'If you want to move all the users to a new channel, what is the channel?',
         required: false,
         type: 'CHANNEL',
