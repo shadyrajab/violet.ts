@@ -1,14 +1,14 @@
 import {
   Client, CommandInteraction, Message, MessageEmbed, User,
 } from 'discord.js';
-import { profileScheme } from '../../database/schemes/profileScheme';
-import { Language, BadgeName, Badge } from '../structures/types';
+import {profileScheme} from '../../database/schemes/profileScheme';
+import {Language, BadgeName, Badge} from '../structures/types';
 import {
-  acquisitionDate,
+  acquisitionDateField,
   alreadyHave,
   belongsTo,
-  description,
-  negociable,
+  descriptionField,
+  negociableField,
   newBadge,
 } from '../../translations/community/badgesMessages';
 
@@ -22,7 +22,7 @@ export class ProfileManager {
   }
 
   async getProfile() {
-    let profile = await profileScheme.findOne({ userId: this.user.id });
+    let profile = await profileScheme.findOne({userId: this.user.id});
     if (!profile) profile = await this.create();
     return profile;
   }
@@ -42,25 +42,25 @@ export class ProfileManager {
   }
 
   async getLanguage(): Promise <Language | null> {
-    const profile = await profileScheme.findOne({ userId: this.user.id });
+    const profile = await profileScheme.findOne({userId: this.user.id});
     if (!profile) return null;
     return profile.language;
   }
 
   async getPremium(): Promise <boolean | undefined> {
-    const profile = await profileScheme.findOne({ userId: this.user.id });
+    const profile = await profileScheme.findOne({userId: this.user.id});
     if (!profile) return;
     return profile.premium;
   }
 
   async marriedWith(): Promise <boolean | undefined> {
-    const profile = await profileScheme.findOne({ userId: this.user.id });
+    const profile = await profileScheme.findOne({userId: this.user.id});
     if (!profile) return;
     return profile.marriedWith;
   }
 
   async getBadges(): Promise <Array <Badge | any>> {
-    const profile = await profileScheme.findOne({ userId: this.user.id });
+    const profile = await profileScheme.findOne({userId: this.user.id});
     if (!profile) return [];
     return profile.badges;
   }
@@ -71,30 +71,33 @@ export class ProfileManager {
     const date = new Date();
     const formatedDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
     if (userBadges.find((badge: Badge) => badge.name === badgeName)) {
-      if (message && language && client) return message.reply({ content: alreadyHave(language), ephemeral: true });
+      if (message && language && client) return message.reply({content: alreadyHave(language), ephemeral: true});
       return;
     }
-    userBadges.push({ name: badgeName, date: formatedDate });
+    userBadges.push({name: badgeName, date: formatedDate});
     await profile.save().catch((err: Error) => console.log(err));
     if (message && language && client) {
+      const {
+        badgeID, badgeColor, badgeIcon, badgeType, negociable, description, badgeFooter,
+      } = badges[badgeName];
       const tierEmoji = client.emojis.cache.get('923300853035712522');
       const embed = new MessageEmbed()
-        .setTitle(`${client.emojis.cache.get(badges[badgeName].badgeID)} ${badgeName}`)
-        .setColor(badges[badgeName].badgeColor)
-        .setThumbnail(badges[badgeName].badgeIcon)
-        .addField(acquisitionDate(language), formatedDate, true)
-        .addField(`${tierEmoji} Tier`, `\`${badges[badgeName].badgeType}\``, true)
-        .addField(negociable(language, client), `${badges[badgeName].negociable}`, true)
-        .addField(description(language), badges[badgeName].description[language], false)
-        .setImage(badges[badgeName].badgeFooter)
-        .setFooter(`${belongsTo(language)} ${user.username}`, user.displayAvatarURL());
-      return message.reply({ content: newBadge(language, user), embeds: [embed] });
+          .setTitle(`${client.emojis.cache.get(badgeID)} ${badgeName}`)
+          .setColor(badgeColor)
+          .setThumbnail(badgeIcon)
+          .addField(acquisitionDateField(language), formatedDate, true)
+          .addField(`${tierEmoji} Tier`, `\`${badgeType}\``, true)
+          .addField(negociableField(language, client), `${negociable}`, true)
+          .addField(descriptionField(language), description[language], false)
+          .setImage(badgeFooter)
+          .setFooter(`${belongsTo(language)} ${user.username}`, user.displayAvatarURL());
+      return message.reply({content: newBadge(language, user), embeds: [embed]});
     }
   }
 
   async changeLanguage(language: Language) {
     const profile = await this.getProfile();
-    await profile.updateOne({ language });
+    await profile.updateOne({language});
     await profile.save().catch((err: Error) => console.log(err));
   }
 }
