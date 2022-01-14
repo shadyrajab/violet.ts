@@ -1,8 +1,8 @@
-import { Client } from 'discord.js';
+import {Client} from 'discord.js';
 import fetch from 'cross-fetch';
-import { Command } from '../../structures/structures/command';
-import { availableTime, noneExistent } from '../../translations/leagueoflegends/checkNickMessages';
-import { dataNotFound } from '../../translations/globalMessages';
+import {Command} from '../../structures/structures/command';
+import {availableTime, noneExistent} from '../../translations/leagueoflegends/checkNickMessages';
+import {dataNotFound} from '../../translations/globalMessages';
 
 require('dotenv').config();
 
@@ -63,12 +63,12 @@ export class CheckNick extends Command {
       }],
 
       execute: async (interaction, language) => {
-        let region = 'americas';
         const username = interaction.options.getString('nickname') as string;
         const server = interaction.options.getString('server') as string;
-        await interaction.deferReply({ ephemeral: true });
-        if (server === 'EUN1' || server === 'EUW1') region = 'europe';
-        if (server === 'JP' || server === 'KR' || server === 'RU' || server === 'OC1' || server === 'TR1') region = 'asia';
+        await interaction.deferReply({ephemeral: true});
+        let region = 'americas';
+        if (server === 'EUN1' || server === 'EUW1' || 'TR1' || 'RU') region = 'europe';
+        if (server === 'JP' || server === 'KR') region = 'asia';
         const request = await fetch(encodeURI(`https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${process.env.RGKEY}`));
         const summoner = await request.json();
         if (request.status === 404) {
