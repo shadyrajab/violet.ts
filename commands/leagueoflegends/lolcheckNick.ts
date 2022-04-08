@@ -67,7 +67,7 @@ export class CheckNick extends Command {
         const server = interaction.options.getString('server') as string;
         await interaction.deferReply({ephemeral: true});
         let region = 'americas';
-        if (server === 'EUN1' || server === 'EUW1' || 'TR1' || 'RU') region = 'europe';
+        if (server === 'EUN1' || server === 'EUW1' || server === 'TR1' || server === 'RU') region = 'europe';
         if (server === 'JP' || server === 'KR') region = 'asia';
         const request = await fetch(encodeURI(`https://${server}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${username}?api_key=${process.env.RGKEY}`));
         const summoner = await request.json();
