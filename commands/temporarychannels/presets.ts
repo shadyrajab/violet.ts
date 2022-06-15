@@ -160,7 +160,7 @@ export class Presets extends Command {
                     if (members.notFound) response.reply(memberNotFound(language));
                     if (members.members.length) {
                       response.react('✅');
-                      return reactCollector.stop()
+                      return memberCollector.stop()
                     } else {
                       response.react('❌');
                     }
@@ -179,7 +179,7 @@ export class Presets extends Command {
                     if (members.notFound) response.reply(memberNotFound(language));
                     if (members.members.length) {
                       response.react('✅');
-                      return reactCollector.stop()
+                      return memberCollector.stop()
                     } else {
                       response.react('❌');
                     }
