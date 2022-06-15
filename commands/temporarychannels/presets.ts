@@ -105,11 +105,11 @@ export class Presets extends Command {
                 if (response.content.length > 20) {
                   response.react('❌');
                   response.reply(charactersLimitReached(language, 20));
-                  return;
+                  return collector.stop()
                 }
                 await presetsManager.manage({method: 'RENAME', name: response.content});
                 response.react('✅');
-                collector.stop();
+                return collector.stop();
               });
             }
             if (reaction.emoji.name === '🔒') {
