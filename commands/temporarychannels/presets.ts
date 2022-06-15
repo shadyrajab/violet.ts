@@ -102,14 +102,14 @@ export class Presets extends Command {
               const replyFilter = (message: Message) => message.author.id === interaction.user.id;
               const replyCollector = replyMessage.channel.createMessageCollector({filter: replyFilter, time: 60000});
               replyCollector.on('collect', async (response: Message) => {
-                if (response.content.length > 20) {
+                if (response.content.length > 25) {
                   response.react('❌');
-                  response.reply(charactersLimitReached(language, 20));
-                  return collector.stop()
+                  response.reply(charactersLimitReached(language, 25));
+                  return replyCollector.stop()
                 }
                 await presetsManager.manage({method: 'RENAME', name: response.content});
                 response.react('✅');
-                return collector.stop();
+                return replyCollector.stop() 
               });
             }
             if (reaction.emoji.name === '🔒') {
@@ -161,8 +161,10 @@ export class Presets extends Command {
                     if (members.notFound) response.reply(memberNotFound(language));
                     if (members.members.length) {
                       response.react('✅');
+                      return reactCollector.stop()
                     } else {
                       response.react('❌');
+                      return reactCollector.stop()
                     }
                   });
                 }
@@ -179,8 +181,10 @@ export class Presets extends Command {
                     if (members.notFound) response.reply(memberNotFound(language));
                     if (members.members.length) {
                       response.react('✅');
+                      return reactCollector.stop()
                     } else {
                       response.react('❌');
+                      return reactCollector.stop()
                     }
                   });
                 }
