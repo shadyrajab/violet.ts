@@ -105,7 +105,6 @@ export class Presets extends Command {
                 if (response.content.length > 25) {
                   response.react('❌');
                   response.reply(charactersLimitReached(language, 25));
-                  return replyCollector.stop()
                 }
                 await presetsManager.manage({method: 'RENAME', name: response.content});
                 response.react('✅');
@@ -164,7 +163,6 @@ export class Presets extends Command {
                       return reactCollector.stop()
                     } else {
                       response.react('❌');
-                      return reactCollector.stop()
                     }
                   });
                 }
@@ -184,7 +182,6 @@ export class Presets extends Command {
                       return reactCollector.stop()
                     } else {
                       response.react('❌');
-                      return reactCollector.stop()
                     }
                   });
                 }
