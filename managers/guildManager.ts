@@ -11,9 +11,8 @@ export class GuildManager {
 
     async getGuild() {
         let guildData = await guildScheme.findOne({ serverId: this.guild.id }).exec();
-        if (!guildData) {
-            guildData = await this.create('doidao');
-        }
+        if (!guildData) guildData = await this.create('english');
+        
         return guildData;
     }
 
