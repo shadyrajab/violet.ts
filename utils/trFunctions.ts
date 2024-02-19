@@ -1,7 +1,7 @@
 import { Guild, GuildMember, Role } from 'discord.js';
 
 export function getMembersAndRoles(inputString: string, guild: Guild) {
-    const membersAndRoles: Array<GuildMember | Role> = [];
+    const members: Array<GuildMember | Role> = [];
     let notFound = false;
 
     const ids = inputString.match(/\d{18}/g) || [];
@@ -10,7 +10,7 @@ export function getMembersAndRoles(inputString: string, guild: Guild) {
         try {
             const user = guild.roles.cache.get(id) || guild.members.cache.get(id);
             if (user) {
-                membersAndRoles.push(user);
+                members.push(user);
             } else {
                 notFound = true;
             }
@@ -19,5 +19,5 @@ export function getMembersAndRoles(inputString: string, guild: Guild) {
         }
     }
 
-    return { membersAndRoles, notFound };
+    return { members, notFound };
 }

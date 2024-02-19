@@ -1,3 +1,5 @@
+import { ApplicationCommandOptionType } from 'discord.js'
+
 export type Language =
     | 'english'
     | 'portuguese'
@@ -23,18 +25,6 @@ export type ChannelMethods =
 
 export type TRoomPermission = 'TRCHANNEL_OWNER' | 'TRCHANNEL_ADMIN'
 
-export type CommandTypes =
-    | 'STRING'
-    | 'BOOLEAN'
-    | 'NUMBER'
-    | 'INTEGER'
-    | 'USER'
-    | 'MENTIONABLE'
-    | 'ROLE'
-    | 'CHANNEL'
-    | 'SUB_COMMAND'
-    | 'SUB_COMMAND_GROUP'
-
 export type CommandChoices = {
     name: string,
     value: string
@@ -44,7 +34,7 @@ export type CommandOptions = {
     name: string
     description: string,
     required: boolean,
-    type: CommandTypes,
+    type: ApplicationCommandOptionType,
     choices?: Array <CommandChoices>
 }
 

@@ -200,7 +200,7 @@ async function handleOption(language: Language, interaction: CommandInteraction,
     const reactCollector = replyMessage.createReactionCollector({ filter: reactFilter, time: 20000 });
 
     reactCollector.on('collect', async (reaction: MessageReaction) => {
-        const { membersAndRoles, notFound } = getMembersAndRoles(reaction.message.content as string, interaction.guild!);
+        const { members, notFound } = getMembersAndRoles(reaction.message.content as string, interaction.guild!);
 
         let method: ChannelMethods;
         if (option === 'BLOCK') {
@@ -209,13 +209,13 @@ async function handleOption(language: Language, interaction: CommandInteraction,
             method = (reaction.emoji.name === '✅') ? `ADD_${option}` as ChannelMethods : `REMOVE_${option}` as ChannelMethods;
         }
 
-        for (const user of membersAndRoles) {
+        for (const user of members) {
             await presetsManager.manage({ method, member: user });
         }
 
         if (notFound) {
             reaction.message.reply(memberNotFound(language));
-        } else if (membersAndRoles.length) {
+        } else if (members.length) {
             reaction.message.react('✅');
         } else {
             reaction.message.react('❌');
