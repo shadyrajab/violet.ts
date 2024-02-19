@@ -69,40 +69,53 @@ export class Room {
 
     async manage({ method, role, name, members }: ManageData) {
         const { channel } = this;
-
+    
+        const permissions = {
+            ADD_MEMBER: { CONNECT: true, VIEW_CHANNEL: true },
+            ADD_ADMIN: {
+                CONNECT: true,
+                VIEW_CHANNEL: true,
+                MANAGE_CHANNELS: true,
+                MANAGE_ROLES: true,
+                MUTE_MEMBERS: true,
+                MOVE_MEMBERS: true,
+                DEAFEN_MEMBERS: true,
+            },
+            BLOCK_MEMBER: { CONNECT: false, VIEW_CHANNEL: false },
+            REMOVE_MEMBER: null,
+            UNBLOCK_MEMBER: null,
+            REMOVE_ADMIN: {
+                MANAGE_CHANNELS: null,
+                MANAGE_ROLES: null,
+                MUTE_MEMBERS: null,
+                MOVE_MEMBERS: null,
+                DEAFEN_MEMBERS: null,
+            },
+            LOCK: { CONNECT: false },
+            UNLOCK: { CONNECT: null },
+            HIDE: { VIEW_CHANNEL: false },
+            UNHIDE: { VIEW_CHANNEL: null },
+        };
+    
         if (members && members.length) {
             for (const member of members) {
-                if (method === 'ADD_ADMIN') {
-                    await this.addAdmin(member);
-                    channel.permissionOverwrites.edit(member, {
-                        Connect: true,
-                        ViewAuditLog: true,
-                        ManageChannels: true,
-                        ManageRoles: true,
-                        MuteMembers: true,
-                        MoveMembers: true,
-                        DeafenMembers: true,
-                    });
-                } else if (method === 'BLOCK_MEMBER') {
-                    // Bloquear membro...
-                } else if (method === 'REMOVE_MEMBER' || method === 'UNBLOCK_MEMBER') {
-                    channel.permissionOverwrites.delete(member);
-                } else if (method === 'REMOVE_ADMIN') {
-                    // Remover admin...
+                if (method === 'ADD_ADMIN') await this.addAdmin(member);
+                if (method === 'BLOCK_MEMBER') {
+                    if (member instanceof GuildMember && member.voice?.channel === channel) await member.edit({ channel: null });
+                    if (member instanceof Role) {
+                        channel.members.forEach(channelMember => {
+                            if (channelMember instanceof GuildMember && channelMember.roles.cache.get(member.id)) channelMember.edit({ channel: null });
+                        });
+                    }
+                    await this.removeAdmin(member);
                 }
+                if (method === 'REMOVE_MEMBER' || method === 'UNBLOCK_MEMBER') channel.permissionOverwrites.delete(member);
+                channel.permissionOverwrites.edit(member, permissions[method]);
             }
         } else if (role) {
-            if (method === 'LOCK') {
-                // Bloquear...
-            } else if (method === 'UNLOCK') {
-                // Desbloquear...
-            } else if (method === 'HIDE') {
-                // Ocultar...
-            } else if (method === 'UNHIDE') {
-                // Exibir...
-            }
+            channel.permissionOverwrites.edit(role, permissions[method]);
         } else if (name && method === 'RENAME') {
-            channel.edit({ name });
+            await channel.edit({ name });
         }
-    }
+    }    
 }
