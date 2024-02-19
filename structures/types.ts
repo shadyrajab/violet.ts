@@ -23,6 +23,10 @@ export type ChannelMethods =
     | 'HIDE'
     | 'UNHIDE'
 
+export type Permissions = {
+    [key in ChannelMethods]: any;
+}          
+
 export type TRoomPermission = 'TRCHANNEL_OWNER' | 'TRCHANNEL_ADMIN'
 
 export type CommandChoices = {

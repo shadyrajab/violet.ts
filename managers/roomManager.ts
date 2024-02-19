@@ -1,6 +1,6 @@
 import { GuildMember, Role, User, VoiceBasedChannel, VoiceChannel } from 'discord.js';
 import { roomScheme } from '../database/schemes/roomScheme';
-import { ChannelMethods } from '../structures/types';
+import { ChannelMethods, Permissions } from '../structures/types';
 
 interface ManageData {
     method: ChannelMethods;
@@ -70,32 +70,33 @@ export class Room {
     async manage({ method, role, name, members }: ManageData) {
         const { channel } = this;
     
-        const permissions = {
-            ADD_MEMBER: { CONNECT: true, VIEW_CHANNEL: true },
+        const permissions: Permissions = {
+            ADD_MEMBER: { Connect: true, ViewChannel: true },
             ADD_ADMIN: {
-                CONNECT: true,
-                VIEW_CHANNEL: true,
-                MANAGE_CHANNELS: true,
-                MANAGE_ROLES: true,
-                MUTE_MEMBERS: true,
-                MOVE_MEMBERS: true,
-                DEAFEN_MEMBERS: true,
+                Connect: true,
+                ViewChannel: true,
+                ManageChannels: true,
+                ManageRoles: true,
+                MuteMembers: true,
+                MoveMembers: true,
+                DeafenMembers: true,
             },
-            BLOCK_MEMBER: { CONNECT: false, VIEW_CHANNEL: false },
-            REMOVE_MEMBER: null,
-            UNBLOCK_MEMBER: null,
+            BLOCK_MEMBER: { Connect: false, ViewChannel: false },
+            REMOVE_MEMBER: { Connect: null, ViewChannel: null },
+            UNBLOCK_MEMBER: { Connect: null, ViewChannel: null },
+            RENAME: null,
             REMOVE_ADMIN: {
-                MANAGE_CHANNELS: null,
-                MANAGE_ROLES: null,
-                MUTE_MEMBERS: null,
-                MOVE_MEMBERS: null,
-                DEAFEN_MEMBERS: null,
+                ManageChannels: null,
+                ManageRoles: null,
+                MuteMembers: null,
+                MoveMembers: null,
+                DeafenMembers: null,
             },
-            LOCK: { CONNECT: false },
-            UNLOCK: { CONNECT: null },
-            HIDE: { VIEW_CHANNEL: false },
-            UNHIDE: { VIEW_CHANNEL: null },
-        };
+            LOCK: { Connect: false },
+            UNLOCK: { Connect: null },
+            HIDE: { ViewChannel: false },
+            UNHIDE: { ViewChannel: null },
+        }
     
         if (members && members.length) {
             for (const member of members) {
@@ -109,7 +110,7 @@ export class Room {
                     }
                     await this.removeAdmin(member);
                 }
-                if (method === 'REMOVE_MEMBER' || method === 'UNBLOCK_MEMBER') channel.permissionOverwrites.delete(member);
+                if (method === 'REMOVE_MEMBER' || method === 'UNBLOCK_MEMBER') return channel.permissionOverwrites.delete(member);
                 channel.permissionOverwrites.edit(member, permissions[method]);
             }
         } else if (role) {
