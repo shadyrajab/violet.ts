@@ -1,0 +1,14 @@
+services:
+  bot_discord_violet:
+    container_name: 'Bot-discod-violet'
+    build:
+      context: .
+    
+    env_file:
+      - ./.env
+    restart: always
+    network_mode: host
+
+
+
+  
