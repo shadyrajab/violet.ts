@@ -1,13 +1,31 @@
 services:
+  postgres:
+    image: postgres:16
+    container_name: violet-postgres
+    environment:
+      POSTGRES_DB: violet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    restart: always
+
   bot_discord_violet:
-    container_name: 'Bot-discod-violet'
+    container_name: Bot-discord-violet
     build:
       context: .
-    
     env_file:
       - ./.env
+    depends_on:
+      - postgres
     restart: always
     network_mode: host
+
+volumes:
+  postgres_data:
 
 
 
