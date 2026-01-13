@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import { Client, ChannelType, VoiceState, DiscordAPIError } from 'discord.js';
-import * as cron from 'node-cron';
+import cron from 'node-cron';
 import { VoiceRoomService } from '../modules/voice/services/VoiceRoomService';
 import { VoiceProfileService } from '../modules/voice/services/VoiceProfileService';
 import { ServerService } from '../modules/servers/services/ServerService';
@@ -16,7 +16,6 @@ import { embedBuilder } from '../shared/embeds/EmbedBuilder';
 @injectable()
 export class VoiceStateUpdateHandler {
   private client!: Client;
-  private cleanupTask!: cron.ScheduledTask;
 
   constructor(
     @inject(VoiceRoomService) private voiceRoomService: VoiceRoomService,
@@ -45,7 +44,7 @@ export class VoiceStateUpdateHandler {
   }
 
   private startPeriodicCleanup(): void {
-    this.cleanupTask = cron.schedule('* * * * *', async () => {
+    cron.schedule('* * * * *', async () => {
       try {
         this.logger.debug('Starting periodic cleanup of empty channels...');
         await this.cleanupEmptyChannels();

@@ -1,1 +1,0 @@
-Worker: npm run main
