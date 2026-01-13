@@ -3,14 +3,12 @@ import { SlashCommandBuilder, EmbedBuilder, GuildMember, VoiceChannel } from 'di
 import { CommandBase, CommandExecuteContext } from '../../../shared/discord/CommandBase';
 import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
-import { DiscordHelper } from '../../../shared/discord/DiscordHelper';
-import { memberNotFound } from '../../../shared/translations/temporarychannels/globalMessages';
-import { traddMemberReply } from '../../../shared/translations/temporarychannels/traddMessages';
+import { trlockReply } from '../../../shared/translations/temporarychannels/trlockMessages';
 
 @injectable()
-export class TRSetAdminCommand extends CommandBase {
-  readonly name = 'trsetadmin';
-  readonly description = 'Temporary channels • Set a member from your channel as admin.';
+export class LockCommand extends CommandBase {
+  readonly name = 'lock';
+  readonly description = 'Temporary channels • Lock your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
 
@@ -24,12 +22,6 @@ export class TRSetAdminCommand extends CommandBase {
     return new SlashCommandBuilder()
       .setName(this.name)
       .setDescription(this.description)
-      .addStringOption(option =>
-        option
-          .setName('members')
-          .setDescription('The users or roles that you want to set as admin.')
-          .setRequired(true)
-      )
       .setDMPermission(false);
   }
 
@@ -38,40 +30,18 @@ export class TRSetAdminCommand extends CommandBase {
     const member = interaction.member as GuildMember;
     const channel = member.voice.channel as VoiceChannel;
 
-    const membersInput = interaction.options.getString('members', true);
-    const { members, notFound } = await DiscordHelper.fetchMembersAndRoles(
-      membersInput,
-      interaction.guild!
-    );
-
-    if (!members.length) {
-      await interaction.reply({
-        content: memberNotFound(language),
-        ephemeral: true
-      });
-      return;
-    }
-
     await this.voicePermissionService.applyPermission(
       channel,
-      VoiceChannelPermission.ADD_ADMIN,
-      members
+      VoiceChannelPermission.LOCK
     );
 
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: traddMemberReply(language, members.join(', ')) })
+      .addFields({ name: '\u200B', value: trlockReply(language) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 
     await interaction.reply({ embeds: [embed], ephemeral: true });
-
-    if (notFound) {
-      await interaction.followUp({
-        content: memberNotFound(language),
-        ephemeral: true
-      });
-    }
   }
 }

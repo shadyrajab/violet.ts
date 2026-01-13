@@ -3,12 +3,14 @@ import { SlashCommandBuilder, EmbedBuilder, GuildMember, VoiceChannel } from 'di
 import { CommandBase, CommandExecuteContext } from '../../../shared/discord/CommandBase';
 import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
-import { trlockReply } from '../../../shared/translations/temporarychannels/trlockMessages';
+import { DiscordHelper } from '../../../shared/discord/DiscordHelper';
+import { memberNotFound } from '../../../shared/translations/temporarychannels/globalMessages';
+import { trunblockReply } from '../../../shared/translations/temporarychannels/trblockMessages';
 
 @injectable()
-export class TRLockCommand extends CommandBase {
-  readonly name = 'trlock';
-  readonly description = 'Temporary channels • Lock your temporary channel.';
+export class UnblockCommand extends CommandBase {
+  readonly name = 'unblock';
+  readonly description = 'Temporary channels • Unblock a member from your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
 
@@ -22,6 +24,12 @@ export class TRLockCommand extends CommandBase {
     return new SlashCommandBuilder()
       .setName(this.name)
       .setDescription(this.description)
+      .addStringOption(option =>
+        option
+          .setName('user')
+          .setDescription('The user or role that you want to unblock.')
+          .setRequired(true)
+      )
       .setDMPermission(false);
   }
 
@@ -30,18 +38,40 @@ export class TRLockCommand extends CommandBase {
     const member = interaction.member as GuildMember;
     const channel = member.voice.channel as VoiceChannel;
 
+    const userInput = interaction.options.getString('user', true);
+    const { members, notFound } = await DiscordHelper.fetchMembersAndRoles(
+      userInput,
+      interaction.guild!
+    );
+
+    if (!members.length) {
+      await interaction.reply({
+        content: memberNotFound(language),
+        ephemeral: true
+      });
+      return;
+    }
+
     await this.voicePermissionService.applyPermission(
       channel,
-      VoiceChannelPermission.LOCK
+      VoiceChannelPermission.UNBLOCK_MEMBER,
+      members
     );
 
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: trlockReply(language) })
+      .addFields({ name: '\u200B', value: trunblockReply(language, members.join(', ')) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 
     await interaction.reply({ embeds: [embed], ephemeral: true });
+
+    if (notFound) {
+      await interaction.followUp({
+        content: memberNotFound(language),
+        ephemeral: true
+      });
+    }
   }
 }

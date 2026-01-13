@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import { Client, ChannelType, VoiceState, DiscordAPIError } from 'discord.js';
 import { VoiceRoomService } from '../modules/voice/services/VoiceRoomService';
+import { VoiceProfileService } from '../modules/voice/services/VoiceProfileService';
 import { ServerService } from '../modules/servers/services/ServerService';
 import { PresetService } from '../modules/presets/services/PresetService';
 import { VoicePermissionService } from '../modules/voice/services/VoicePermissionService';
@@ -18,6 +19,7 @@ export class VoiceStateUpdateHandler {
 
   constructor(
     @inject(VoiceRoomService) private voiceRoomService: VoiceRoomService,
+    @inject(VoiceProfileService) private voiceProfileService: VoiceProfileService,
     @inject(ServerService) private serverService: ServerService,
     @inject(PresetService) private presetService: PresetService,
     @inject(VoicePermissionService) private voicePermissionService: VoicePermissionService,
@@ -45,36 +47,39 @@ export class VoiceStateUpdateHandler {
       this.logger.info('Starting cleanup of inactive channels...');
 
       for (const [, guild] of client.guilds.cache) {
-        const serverConfig = await this.serverService.getServerConfig(guild.id);
-        if (!serverConfig?.categoryId) continue;
+        const profiles = await this.voiceProfileService.getGuildProfiles(guild.id);
 
-        const category = await guild.channels.fetch(serverConfig.categoryId).catch(() => null);
-        if (!category || category.type !== ChannelType.GuildCategory) continue;
+        for (const profile of profiles) {
+          if (!profile.isActive) continue;
 
-        const voiceChannels = Array.from(category.children.cache.values()).filter(
-          channel => channel.type === ChannelType.GuildVoice
-        );
+          const category = await guild.channels.fetch(profile.categoryId).catch(() => null);
+          if (!category || category.type !== ChannelType.GuildCategory) continue;
 
-        for (const voiceChannel of voiceChannels) {
-          if (voiceChannel.id === serverConfig.channelId) continue;
+          const voiceChannels = Array.from(category.children.cache.values()).filter(
+            channel => channel.type === ChannelType.GuildVoice
+          );
 
-          const isRoom = await this.voiceRoomService.isRoom(voiceChannel.id);
-          if (!isRoom) continue;
+          for (const voiceChannel of voiceChannels) {
+            if (voiceChannel.id === profile.joinChannelId) continue;
 
-          if (voiceChannel.type === ChannelType.GuildVoice && voiceChannel.members.size === 0) {
-            setTimeout(async () => {
-              try {
-                const channel = await guild.channels.fetch(voiceChannel.id).catch(() => null);
-                if (channel && channel.type === ChannelType.GuildVoice && channel.members.size === 0) {
-                  await channel.delete('Cleanup - Empty channel after restart');
-                  await this.voiceRoomService.deleteRoom(voiceChannel.id);
-                  this.logger.info('Inactive channel cleaned up', { channelId: voiceChannel.id });
+            const isRoom = await this.voiceRoomService.isRoom(voiceChannel.id);
+            if (!isRoom) continue;
+
+            if (voiceChannel.type === ChannelType.GuildVoice && voiceChannel.members.size === 0) {
+              setTimeout(async () => {
+                try {
+                  const channel = await guild.channels.fetch(voiceChannel.id).catch(() => null);
+                  if (channel && channel.type === ChannelType.GuildVoice && channel.members.size === 0) {
+                    await channel.delete('Cleanup - Empty channel after restart');
+                    await this.voiceRoomService.deleteRoom(voiceChannel.id);
+                    this.logger.info('Inactive channel cleaned up', { channelId: voiceChannel.id });
+                  }
+                } catch (error) {
+                  await this.voiceRoomService.deleteRoom(voiceChannel.id).catch(() => {});
+                  this.logger.debug('Channel cleanup error handled', { channelId: voiceChannel.id });
                 }
-              } catch (error) {
-                await this.voiceRoomService.deleteRoom(voiceChannel.id).catch(() => {});
-                this.logger.debug('Channel cleanup error handled', { channelId: voiceChannel.id });
-              }
-            }, 10000);
+              }, 10000);
+            }
           }
         }
       }
@@ -94,79 +99,104 @@ export class VoiceStateUpdateHandler {
       const user = member.user;
       const channel = newState.channel;
 
-      const serverConfig = await this.serverService.getServerConfig(guild.id);
-      const trcategory = serverConfig?.categoryId;
-      const trchannel = serverConfig?.channelId;
+      if (channel) {
+        const profile = await this.voiceProfileService.getProfileByJoinChannel(channel.id);
 
-      if (trcategory && trchannel && channel && channel.id === trchannel) {
-        const userLanguage = await this.userService.getUserLanguage(user.id);
-        const serverLanguage = await this.serverService.getServerLanguage(guild.id);
-        const language = userLanguage !== 'english' ? userLanguage : serverLanguage;
-        const canCreate = await this.voiceRoomService.canUserCreateRoom(user.id);
+        if (profile) {
+          const userLanguage = await this.userService.getUserLanguage(user.id);
+          const serverLanguage = await this.serverService.getServerLanguage(guild.id);
+          const language = userLanguage !== 'english' ? userLanguage : serverLanguage;
+          const canCreate = await this.voiceRoomService.canUserCreateRoom(user.id);
 
-        if (!canCreate) {
-          try {
-            await member.send(`${member}, ${simultaneousChannel(language)}`);
-          } catch {}
-          await member.edit({ channel: null });
-          return;
-        }
-
-        const preset = await this.presetService.getPreset(user.id, guild.id);
-        let channelName = preset?.name;
-        channelName = (!channelName || channelName === 'default') ? `${user.username}'s channel` : channelName;
-
-        try {
-          const categoryChannel = await guild.channels.fetch(trcategory);
-          if (!categoryChannel || categoryChannel.type !== ChannelType.GuildCategory) {
-            this.logger.warn('Category channel not found or invalid', { categoryId: trcategory });
+          if (!canCreate) {
+            try {
+              await member.send(`${member}, ${simultaneousChannel(language)}`);
+            } catch {}
+            await member.edit({ channel: null });
             return;
           }
 
-          const tempChannel = await guild.channels.create({
-            name: channelName,
-            type: ChannelType.GuildVoice,
-            parent: trcategory,
-            reason: `New tr channel to ${user.tag}`,
-          });
+          const preset = await this.presetService.getPreset(user.id, guild.id);
+          let channelName = preset?.name;
+          channelName = (!channelName || channelName === 'default') ? `${user.username}'s channel` : channelName;
 
-          if (preset) {
-            await this.voicePermissionService.applyPresetPermissions(
-              tempChannel,
-              preset.memberIds,
-              preset.adminIds,
-              preset.blockedIds,
-              preset.hide,
-              preset.lock
-            );
-          }
+          try {
+            const categoryChannel = await guild.channels.fetch(profile.categoryId);
+            if (!categoryChannel || categoryChannel.type !== ChannelType.GuildCategory) {
+              this.logger.warn('Category channel not found or invalid', { categoryId: profile.categoryId });
+              return;
+            }
 
-          const room = await this.voiceRoomService.createRoom(tempChannel.id, user.id, preset?.adminIds || []);
+            const tempChannel = await guild.channels.create({
+              name: channelName,
+              type: ChannelType.GuildVoice,
+              parent: profile.categoryId,
+              reason: `New tr channel to ${user.tag}`,
+            });
 
-          await this.voiceChannelManagementService.sendManagementEmbed(tempChannel, user.id, room);
+            if (preset) {
+              await this.voicePermissionService.applyPresetPermissions(
+                tempChannel,
+                preset.memberIds,
+                preset.adminIds,
+                preset.blockedIds,
+                preset.hide,
+                preset.lock
+              );
+            }
 
-          await member.edit({ channel: tempChannel });
-        } catch (err) {
-          if (err instanceof DiscordAPIError && err.message === 'Missing Permissions') {
             try {
-              await member.send(permissionsRemoved(language));
-            } catch {}
+              const room = await this.voiceRoomService.createRoom(tempChannel.id, user.id, preset?.adminIds || []);
+
+              await this.voiceChannelManagementService.sendManagementEmbed(tempChannel, user.id, room);
+
+              await member.edit({ channel: tempChannel });
+            } catch (roomError) {
+              this.logger.warn('Failed to create room in database, deleting channel', {
+                channelId: tempChannel.id,
+                error: (roomError as Error).message
+              });
+
+              try {
+                await tempChannel.delete('Failed to register room in database');
+              } catch (deleteError) {
+                this.logger.error('Failed to delete channel after room creation error', deleteError as Error, {
+                  channelId: tempChannel.id
+                });
+              }
+
+              if ((roomError as Error).message.includes('maximum room limit')) {
+                try {
+                  await member.send(`${member}, ${simultaneousChannel(language)}`);
+                } catch {}
+              }
+
+              return;
+            }
+          } catch (err) {
+            if (err instanceof DiscordAPIError && err.message === 'Missing Permissions') {
+              try {
+                await member.send(permissionsRemoved(language));
+              } catch {}
+            }
+            this.logger.error('Failed to create temporary channel', err as Error, {
+              userId: user.id,
+              guildId: guild.id
+            });
           }
-          this.logger.error('Failed to create temporary channel', err as Error, {
-            userId: user.id,
-            guildId: guild.id
-          });
         }
       }
+
+      const allProfiles = await this.voiceProfileService.getGuildProfiles(guild.id);
+      const joinChannelIds = allProfiles.filter(p => p.isActive).map(p => p.joinChannelId);
 
       this.logger.debug('Voice state update', {
         oldChannelId: _oldState.channelId,
         newChannelId: newState.channelId,
-        trchannel,
         userId: user.id
       });
 
-      if (_oldState.channelId && _oldState.channelId !== trchannel && _oldState.channelId !== newState.channelId) {
+      if (_oldState.channelId && !joinChannelIds.includes(_oldState.channelId) && _oldState.channelId !== newState.channelId) {
         this.logger.debug('User left a channel, checking if it should be deleted', {
           channelId: _oldState.channelId
         });
@@ -208,7 +238,7 @@ export class VoiceStateUpdateHandler {
         }
       }
 
-      if (newState.channelId && newState.channelId !== trchannel) {
+      if (newState.channelId && !joinChannelIds.includes(newState.channelId)) {
         const isRoom = await this.voiceRoomService.isRoom(newState.channelId);
 
         if (isRoom) {
@@ -231,7 +261,7 @@ export class VoiceStateUpdateHandler {
         }
       }
 
-      if (_oldState.channelId && _oldState.channelId !== trchannel && _oldState.channelId !== newState.channelId) {
+      if (_oldState.channelId && !joinChannelIds.includes(_oldState.channelId) && _oldState.channelId !== newState.channelId) {
         const isRoom = await this.voiceRoomService.isRoom(_oldState.channelId);
 
         if (isRoom) {

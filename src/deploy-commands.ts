@@ -5,20 +5,21 @@ import { setupContainer, container } from './core/container';
 import { Logger } from './core/logger';
 import { Config } from './core/config';
 
-import { TRSetupCommand } from './modules/configuration/commands/TRSetupCommand';
-import { TRDisableCommand } from './modules/configuration/commands/TRDisableCommand';
 import { PresetsCommand } from './modules/presets/commands/PresetsCommand';
-import { TRAddCommand } from './modules/voice/commands/TRAddCommand';
-import { TRBlockCommand } from './modules/voice/commands/TRBlockCommand';
-import { TRHideCommand } from './modules/voice/commands/TRHideCommand';
-import { TRLockCommand } from './modules/voice/commands/TRLockCommand';
-import { TRRemoveAdminCommand } from './modules/voice/commands/TRRemoveAdminCommand';
-import { TRRemoveCommand } from './modules/voice/commands/TRRemoveCommand';
-import { TRRenameCommand } from './modules/voice/commands/TRRenameCommand';
-import { TRSetAdminCommand } from './modules/voice/commands/TRSetAdminCommand';
-import { TRUnblockCommand } from './modules/voice/commands/TRUnblockCommand';
-import { TRUnhideCommand } from './modules/voice/commands/TRUnhideCommand';
-import { TRUnlockCommand } from './modules/voice/commands/TRUnlockCommand';
+import { SetupCommand } from './modules/voice/commands/SetupCommand';
+import { DisableCommand } from './modules/voice/commands/DisableCommand';
+import { ProfilesCommand } from './modules/voice/commands/ProfilesCommand';
+import { AddCommand } from './modules/voice/commands/AddCommand';
+import { BlockCommand } from './modules/voice/commands/BlockCommand';
+import { HideCommand } from './modules/voice/commands/HideCommand';
+import { LockCommand } from './modules/voice/commands/LockCommand';
+import { RemoveAdminCommand } from './modules/voice/commands/RemoveAdminCommand';
+import { RemoveCommand } from './modules/voice/commands/RemoveCommand';
+import { RenameCommand } from './modules/voice/commands/RenameCommand';
+import { SetAdminCommand } from './modules/voice/commands/SetAdminCommand';
+import { UnblockCommand } from './modules/voice/commands/UnblockCommand';
+import { UnhideCommand } from './modules/voice/commands/UnhideCommand';
+import { UnlockCommand } from './modules/voice/commands/UnlockCommand';
 
 config();
 
@@ -33,20 +34,21 @@ async function deployCommands() {
     console.log(`📋 Application ID: ${appConfig.discord.clientId}`);
 
     const commands = [
-      container.resolve(TRSetupCommand),
-      container.resolve(TRDisableCommand),
       container.resolve(PresetsCommand),
-      container.resolve(TRAddCommand),
-      container.resolve(TRBlockCommand),
-      container.resolve(TRHideCommand),
-      container.resolve(TRLockCommand),
-      container.resolve(TRRemoveAdminCommand),
-      container.resolve(TRRemoveCommand),
-      container.resolve(TRRenameCommand),
-      container.resolve(TRSetAdminCommand),
-      container.resolve(TRUnblockCommand),
-      container.resolve(TRUnhideCommand),
-      container.resolve(TRUnlockCommand),
+      container.resolve(SetupCommand),
+      container.resolve(DisableCommand),
+      container.resolve(ProfilesCommand),
+      container.resolve(AddCommand),
+      container.resolve(BlockCommand),
+      container.resolve(HideCommand),
+      container.resolve(LockCommand),
+      container.resolve(RemoveAdminCommand),
+      container.resolve(RemoveCommand),
+      container.resolve(RenameCommand),
+      container.resolve(SetAdminCommand),
+      container.resolve(UnblockCommand),
+      container.resolve(UnhideCommand),
+      container.resolve(UnlockCommand),
     ];
 
     const commandData = commands.map(cmd => cmd.buildCommand().toJSON());

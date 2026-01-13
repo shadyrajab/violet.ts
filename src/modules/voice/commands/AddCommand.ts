@@ -5,12 +5,12 @@ import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
 import { DiscordHelper } from '../../../shared/discord/DiscordHelper';
 import { memberNotFound } from '../../../shared/translations/temporarychannels/globalMessages';
-import { tremoveMemberReply } from '../../../shared/translations/temporarychannels/traddMessages';
+import { traddMemberReply } from '../../../shared/translations/temporarychannels/traddMessages';
 
 @injectable()
-export class TRRemoveCommand extends CommandBase {
-  readonly name = 'tremove';
-  readonly description = 'Temporary channels • Remove a member from your temporary channel.';
+export class AddCommand extends CommandBase {
+  readonly name = 'add';
+  readonly description = 'Temporary channels • Add a member in your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
 
@@ -27,7 +27,7 @@ export class TRRemoveCommand extends CommandBase {
       .addStringOption(option =>
         option
           .setName('members')
-          .setDescription('The users or roles that you want to remove.')
+          .setDescription('The users or roles that you want to add.')
           .setRequired(true)
       )
       .setDMPermission(false);
@@ -54,14 +54,14 @@ export class TRRemoveCommand extends CommandBase {
 
     await this.voicePermissionService.applyPermission(
       channel,
-      VoiceChannelPermission.REMOVE_MEMBER,
+      VoiceChannelPermission.ADD_MEMBER,
       members
     );
 
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: tremoveMemberReply(language, members.join(', ')) })
+      .addFields({ name: '\u200B', value: traddMemberReply(language, members.join(', ')) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 

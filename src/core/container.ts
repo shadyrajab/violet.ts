@@ -14,8 +14,11 @@ import { ServerRepository } from '../modules/servers/repositories/ServerReposito
 import { ServerService } from '../modules/servers/services/ServerService';
 
 import { VoiceRoom } from '../modules/voice/entities/VoiceRoom';
+import { VoiceProfile } from '../modules/voice/entities/VoiceProfile';
 import { VoiceRoomRepository } from '../modules/voice/repositories/VoiceRoomRepository';
+import { VoiceProfileRepository } from '../modules/voice/repositories/VoiceProfileRepository';
 import { VoiceRoomService } from '../modules/voice/services/VoiceRoomService';
+import { VoiceProfileService } from '../modules/voice/services/VoiceProfileService';
 import { VoicePermissionService } from '../modules/voice/services/VoicePermissionService';
 import { VoiceChannelLogService } from '../modules/voice/services/VoiceChannelLogService';
 import { VoiceChannelManagementService } from '../modules/voice/services/VoiceChannelManagementService';
@@ -49,6 +52,7 @@ export async function setupContainer(): Promise<void> {
   container.registerInstance('UserRepository', dataSource.getRepository(User));
   container.registerInstance('ServerRepository', dataSource.getRepository(Server));
   container.registerInstance('VoiceRoomRepository', dataSource.getRepository(VoiceRoom));
+  container.registerInstance('VoiceProfileRepository', dataSource.getRepository(VoiceProfile));
   container.registerInstance('PresetRepository', dataSource.getRepository(Preset));
   container.registerInstance('SubscriptionRepository', dataSource.getRepository(Subscription));
   container.registerInstance('UserServerSubscriptionRepository', dataSource.getRepository(UserServerSubscription));
@@ -60,7 +64,9 @@ export async function setupContainer(): Promise<void> {
   container.registerSingleton(ServerService);
 
   container.registerSingleton(VoiceRoomRepository);
+  container.registerSingleton(VoiceProfileRepository);
   container.registerSingleton(VoiceRoomService);
+  container.registerSingleton(VoiceProfileService);
   container.registerSingleton(VoicePermissionService);
   container.registerSingleton(VoiceChannelLogService);
   container.registerSingleton(VoiceChannelManagementService);

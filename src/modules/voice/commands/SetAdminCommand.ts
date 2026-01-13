@@ -5,12 +5,12 @@ import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
 import { DiscordHelper } from '../../../shared/discord/DiscordHelper';
 import { memberNotFound } from '../../../shared/translations/temporarychannels/globalMessages';
-import { tremoveMemberReply } from '../../../shared/translations/temporarychannels/traddMessages';
+import { traddMemberReply } from '../../../shared/translations/temporarychannels/traddMessages';
 
 @injectable()
-export class TRRemoveAdminCommand extends CommandBase {
-  readonly name = 'tremoveadmin';
-  readonly description = 'Temporary channels • Remove an admin from your temporary channel.';
+export class SetAdminCommand extends CommandBase {
+  readonly name = 'setadmin';
+  readonly description = 'Temporary channels • Set a member from your channel as admin.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
 
@@ -27,7 +27,7 @@ export class TRRemoveAdminCommand extends CommandBase {
       .addStringOption(option =>
         option
           .setName('members')
-          .setDescription('The users or roles that you want to remove.')
+          .setDescription('The users or roles that you want to set as admin.')
           .setRequired(true)
       )
       .setDMPermission(false);
@@ -54,14 +54,14 @@ export class TRRemoveAdminCommand extends CommandBase {
 
     await this.voicePermissionService.applyPermission(
       channel,
-      VoiceChannelPermission.REMOVE_ADMIN,
+      VoiceChannelPermission.ADD_ADMIN,
       members
     );
 
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: tremoveMemberReply(language, members.join(', ')) })
+      .addFields({ name: '\u200B', value: traddMemberReply(language, members.join(', ')) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 

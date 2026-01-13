@@ -3,13 +3,14 @@ import { SlashCommandBuilder, EmbedBuilder, GuildMember, VoiceChannel } from 'di
 import { CommandBase, CommandExecuteContext } from '../../../shared/discord/CommandBase';
 import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
-import { charactersLimitReached } from '../../../shared/translations/temporarychannels/globalMessages';
-import { trenameReply } from '../../../shared/translations/temporarychannels/trenameMessages';
+import { DiscordHelper } from '../../../shared/discord/DiscordHelper';
+import { memberNotFound } from '../../../shared/translations/temporarychannels/globalMessages';
+import { tremoveMemberReply } from '../../../shared/translations/temporarychannels/traddMessages';
 
 @injectable()
-export class TRRenameCommand extends CommandBase {
-  readonly name = 'trename';
-  readonly description = 'Temporary channels • Rename your temporary channel.';
+export class RemoveCommand extends CommandBase {
+  readonly name = 'emove';
+  readonly description = 'Temporary channels • Remove a member from your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
 
@@ -25,8 +26,8 @@ export class TRRenameCommand extends CommandBase {
       .setDescription(this.description)
       .addStringOption(option =>
         option
-          .setName('name')
-          .setDescription('The new name of the channel')
+          .setName('members')
+          .setDescription('The users or roles that you want to remove.')
           .setRequired(true)
       )
       .setDMPermission(false);
@@ -37,11 +38,15 @@ export class TRRenameCommand extends CommandBase {
     const member = interaction.member as GuildMember;
     const channel = member.voice.channel as VoiceChannel;
 
-    const newName = interaction.options.getString('name', true);
+    const membersInput = interaction.options.getString('members', true);
+    const { members, notFound } = await DiscordHelper.fetchMembersAndRoles(
+      membersInput,
+      interaction.guild!
+    );
 
-    if (newName.length > 20) {
+    if (!members.length) {
       await interaction.reply({
-        content: charactersLimitReached(language, 20),
+        content: memberNotFound(language),
         ephemeral: true
       });
       return;
@@ -49,18 +54,24 @@ export class TRRenameCommand extends CommandBase {
 
     await this.voicePermissionService.applyPermission(
       channel,
-      VoiceChannelPermission.RENAME,
-      undefined,
-      newName
+      VoiceChannelPermission.REMOVE_MEMBER,
+      members
     );
 
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: trenameReply(language, newName) })
+      .addFields({ name: '\u200B', value: tremoveMemberReply(language, members.join(', ')) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 
     await interaction.reply({ embeds: [embed], ephemeral: true });
+
+    if (notFound) {
+      await interaction.followUp({
+        content: memberNotFound(language),
+        ephemeral: true
+      });
+    }
   }
 }

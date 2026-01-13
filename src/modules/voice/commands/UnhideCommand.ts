@@ -3,12 +3,12 @@ import { SlashCommandBuilder, EmbedBuilder, GuildMember, VoiceChannel } from 'di
 import { CommandBase, CommandExecuteContext } from '../../../shared/discord/CommandBase';
 import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
-import { trunlockReply } from '../../../shared/translations/temporarychannels/trlockMessages';
+import { trunhideReply } from '../../../shared/translations/temporarychannels/trhideMessages';
 
 @injectable()
-export class TRUnlockCommand extends CommandBase {
-  readonly name = 'trunlock';
-  readonly description = 'Temporary channels • Unlock your temporary channel.';
+export class UnhideCommand extends CommandBase {
+  readonly name = 'unhide';
+  readonly description = 'Temporary channels • Remove the invisibility from your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
 
@@ -32,13 +32,13 @@ export class TRUnlockCommand extends CommandBase {
 
     await this.voicePermissionService.applyPermission(
       channel,
-      VoiceChannelPermission.UNLOCK
+      VoiceChannelPermission.UNHIDE
     );
 
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: trunlockReply(language) })
+      .addFields({ name: '\u200B', value: trunhideReply(language) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 

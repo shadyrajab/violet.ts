@@ -8,8 +8,8 @@ import { memberNotFound } from '../../../shared/translations/temporarychannels/g
 import { trblockReply } from '../../../shared/translations/temporarychannels/trblockMessages';
 
 @injectable()
-export class TRBlockCommand extends CommandBase {
-  readonly name = 'trblock';
+export class BlockCommand extends CommandBase {
+  readonly name = 'block';
   readonly description = 'Temporary channels • Block a member from your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
