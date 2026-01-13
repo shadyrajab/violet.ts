@@ -1,5 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import { Client, ChannelType, VoiceState, DiscordAPIError } from 'discord.js';
+import * as cron from 'node-cron';
 import { VoiceRoomService } from '../modules/voice/services/VoiceRoomService';
 import { VoiceProfileService } from '../modules/voice/services/VoiceProfileService';
 import { ServerService } from '../modules/servers/services/ServerService';
@@ -14,8 +15,8 @@ import { embedBuilder } from '../shared/embeds/EmbedBuilder';
 
 @injectable()
 export class VoiceStateUpdateHandler {
-  private deletionTimers: Map<string, NodeJS.Timeout> = new Map();
   private client!: Client;
+  private cleanupTask!: cron.ScheduledTask;
 
   constructor(
     @inject(VoiceRoomService) private voiceRoomService: VoiceRoomService,
@@ -37,9 +38,58 @@ export class VoiceStateUpdateHandler {
 
     client.once('ready', async () => {
       await this.cleanupInactiveChannels(client);
+      this.startPeriodicCleanup();
     });
 
     this.logger.info('VoiceStateUpdateHandler registered');
+  }
+
+  private startPeriodicCleanup(): void {
+    this.cleanupTask = cron.schedule('* * * * *', async () => {
+      try {
+        this.logger.debug('Starting periodic cleanup of empty channels...');
+        await this.cleanupEmptyChannels();
+      } catch (error) {
+        this.logger.error('Error during periodic cleanup', error as Error);
+      }
+    });
+
+    this.logger.info('Periodic cleanup started (cron: every 1 minute)');
+  }
+
+  private async cleanupEmptyChannels(): Promise<void> {
+    for (const [, guild] of this.client.guilds.cache) {
+      const profiles = await this.voiceProfileService.getGuildProfiles(guild.id);
+
+      for (const profile of profiles) {
+        if (!profile.isActive) continue;
+
+        const category = await guild.channels.fetch(profile.categoryId).catch(() => null);
+        if (!category || category.type !== ChannelType.GuildCategory) continue;
+
+        const voiceChannels = Array.from(category.children.cache.values()).filter(
+          channel => channel.type === ChannelType.GuildVoice
+        );
+
+        for (const voiceChannel of voiceChannels) {
+          if (voiceChannel.id === profile.joinChannelId) continue;
+
+          const isRoom = await this.voiceRoomService.isRoom(voiceChannel.id);
+          if (!isRoom) continue;
+
+          if (voiceChannel.type === ChannelType.GuildVoice && voiceChannel.members.size === 0) {
+            try {
+              await voiceChannel.delete('Periodic cleanup - Empty channel');
+              await this.voiceRoomService.deleteRoom(voiceChannel.id);
+              this.logger.info('Empty channel deleted by periodic cleanup', { channelId: voiceChannel.id });
+            } catch (error) {
+              await this.voiceRoomService.deleteRoom(voiceChannel.id).catch(() => {});
+              this.logger.debug('Channel cleanup error handled', { channelId: voiceChannel.id });
+            }
+          }
+        }
+      }
+    }
   }
 
   private async cleanupInactiveChannels(client: Client): Promise<void> {
@@ -196,67 +246,18 @@ export class VoiceStateUpdateHandler {
         userId: user.id
       });
 
-      if (_oldState.channelId && !joinChannelIds.includes(_oldState.channelId) && _oldState.channelId !== newState.channelId) {
-        this.logger.debug('User left a channel, checking if it should be deleted', {
-          channelId: _oldState.channelId
-        });
-
-        const isRoom = await this.voiceRoomService.isRoom(_oldState.channelId);
-
-        this.logger.debug('Is room check result', {
-          channelId: _oldState.channelId,
-          isRoom
-        });
-
-        if (isRoom) {
-          const oldChannel = await guild.channels.fetch(_oldState.channelId).catch(() => null);
-
-          if (oldChannel && oldChannel.type === ChannelType.GuildVoice) {
-            this.logger.debug('Old channel found', {
-              channelId: _oldState.channelId,
-              channelName: oldChannel.name,
-              memberCount: oldChannel.members.size
-            });
-
-            if (oldChannel.members.size === 0) {
-              this.logger.info('Scheduling deletion for empty channel', {
-                channelId: _oldState.channelId,
-                channelName: oldChannel.name
-              });
-              this.scheduleChannelDeletion(_oldState.channelId, guild.id);
-            } else {
-              this.logger.debug('Channel still has members, not scheduling deletion', {
-                channelId: _oldState.channelId,
-                memberCount: oldChannel.members.size
-              });
-            }
-          } else {
-            this.logger.debug('Old channel not found or not voice channel', {
-              channelId: _oldState.channelId
-            });
-          }
-        }
-      }
-
       if (newState.channelId && !joinChannelIds.includes(newState.channelId)) {
         const isRoom = await this.voiceRoomService.isRoom(newState.channelId);
 
-        if (isRoom) {
-          if (this.deletionTimers.has(newState.channelId)) {
-            this.logger.debug('Cancelling deletion for re-occupied channel', { channelId: newState.channelId });
-            this.cancelChannelDeletion(newState.channelId);
-          }
-
-          if (newState.channelId !== _oldState.channelId) {
-            const channel = await guild.channels.fetch(newState.channelId).catch(() => null);
-            if (channel && channel.type === ChannelType.GuildVoice) {
-              await channel.send({
-                embeds: [embedBuilder.createInfoEmbed(
-                  'Member Joined',
-                  `**${user.username}** joined the channel`
-                )]
-              }).catch(() => {});
-            }
+        if (isRoom && newState.channelId !== _oldState.channelId) {
+          const channel = await guild.channels.fetch(newState.channelId).catch(() => null);
+          if (channel && channel.type === ChannelType.GuildVoice) {
+            await channel.send({
+              embeds: [embedBuilder.createInfoEmbed(
+                'Member Joined',
+                `**${user.username}** joined the channel`
+              )]
+            }).catch(() => {});
           }
         }
       }
@@ -281,68 +282,4 @@ export class VoiceStateUpdateHandler {
     }
   }
 
-  private scheduleChannelDeletion(channelId: string, guildId: string): void {
-    if (this.deletionTimers.has(channelId)) {
-      clearTimeout(this.deletionTimers.get(channelId)!);
-      this.logger.debug('Clearing existing deletion timer', { channelId });
-    }
-
-    const timer = setTimeout(async () => {
-      this.logger.debug('Deletion timer fired, checking channel', { channelId });
-      try {
-        const guild = await this.client.guilds.fetch(guildId).catch(() => null);
-        if (!guild) {
-          this.logger.debug('Guild not found', { guildId });
-          return;
-        }
-
-        const channel = await guild.channels.fetch(channelId).catch(() => null);
-
-        if (!channel || channel.type !== ChannelType.GuildVoice) {
-          this.logger.debug('Channel not found or not voice channel, cleaning database', { channelId });
-          await this.voiceRoomService.deleteRoom(channelId);
-          this.deletionTimers.delete(channelId);
-          return;
-        }
-
-        this.logger.debug('Channel found, checking members', {
-          channelId,
-          memberCount: channel.members.size
-        });
-
-        if (channel.members.size === 0) {
-          this.logger.info('Deleting empty voice channel', {
-            channelId,
-            channelName: channel.name
-          });
-          await channel.delete('Inactivity - 10s without members');
-          await this.voiceRoomService.deleteRoom(channelId);
-          this.logger.info('Empty voice channel deleted successfully', { channelId });
-        } else {
-          this.logger.debug('Channel has members, skipping deletion', {
-            channelId,
-            memberCount: channel.members.size
-          });
-        }
-
-        this.deletionTimers.delete(channelId);
-      } catch (error) {
-        this.logger.error('Error during channel deletion', error as Error, { channelId });
-        await this.voiceRoomService.deleteRoom(channelId).catch(() => {});
-        this.deletionTimers.delete(channelId);
-      }
-    }, 10000);
-
-    this.deletionTimers.set(channelId, timer);
-    this.logger.info('Channel deletion scheduled for 10 seconds', { channelId });
-  }
-
-  private cancelChannelDeletion(channelId: string): void {
-    const timer = this.deletionTimers.get(channelId);
-    if (timer) {
-      clearTimeout(timer);
-      this.deletionTimers.delete(channelId);
-      this.logger.debug('Channel deletion cancelled', { channelId });
-    }
-  }
 }
