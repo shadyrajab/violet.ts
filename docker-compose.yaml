@@ -1,0 +1,37 @@
+services:
+  bot_discord_violet:
+    container_name: Bot-discord-violet
+    build:
+      context: .
+    env_file:
+      - ./.env
+    depends_on:
+      - postgres
+      - apm-server
+    restart: always
+    network_mode: host
+    labels:
+      - "logging=promtail"
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.17.0
+    container_name: violet-apm
+    ports:
+      - "8200:8200"
+    command: >
+      apm-server -e
+        -E apm-server.rum.enabled=true
+        -E setup.kibana.host=kibana:5601
+        -E setup.template.settings.index.number_of_replicas=0
+        -E output.elasticsearch.hosts=["http://elasticsearch:9200"]
+    depends_on:
+      - elasticsearch
+    restart: always
+
+volumes:
+  postgres_data:
+  elasticsearch_data:
+
+
+
+  
