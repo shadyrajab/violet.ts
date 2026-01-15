@@ -16,6 +16,9 @@ export type Envs = {
   APM_ENABLED: string;
   APM_SERVICE_NAME: string;
   APM_SERVER_URL: string;
+
+  THE_MOVIE_DB_API_KEY: string;
+  THE_MOVIE_DB_API_URL: string;
 };
 
 export const envs = new Proxy<Envs>(process.env as unknown as Envs, {

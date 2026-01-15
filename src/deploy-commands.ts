@@ -19,6 +19,10 @@ import { SetAdminCommand } from './modules/voice/commands/SetAdminCommand';
 import { UnblockCommand } from './modules/voice/commands/UnblockCommand';
 import { UnhideCommand } from './modules/voice/commands/UnhideCommand';
 import { UnlockCommand } from './modules/voice/commands/UnlockCommand';
+import { LinkPremiumCommand } from './modules/subscriptions/commands/LinkPremiumCommand';
+import { MovieCommand } from './modules/cinema/commands/MovieCommand';
+import { SessionCommand } from './modules/cinema/commands/SessionCommand';
+import { HistoryCommand } from './modules/cinema/commands/HistoryCommand';
 
 async function deployCommands() {
   try {
@@ -45,6 +49,10 @@ async function deployCommands() {
       container.resolve(UnblockCommand),
       container.resolve(UnhideCommand),
       container.resolve(UnlockCommand),
+      container.resolve(LinkPremiumCommand),
+      container.resolve(MovieCommand),
+      container.resolve(SessionCommand),
+      container.resolve(HistoryCommand),
     ];
 
     const commandData = commands.map(cmd => cmd.buildCommand().toJSON());

@@ -9,6 +9,8 @@ import { VoiceStateUpdateHandler } from './events/VoiceStateUpdateHandler';
 import { ChannelDeleteHandler } from './events/ChannelDeleteHandler';
 import { InteractionCreateHandler } from './events/InteractionCreateHandler';
 import { GuildCreateHandler } from './events/GuildCreateHandler';
+import { GuildScheduledEventHandler } from './events/GuildScheduledEventHandler';
+import { CinemaSessionCron } from './events/CinemaSessionCron';
 
 import { PresetsCommand } from './modules/presets/commands/PresetsCommand';
 import { SetupCommand } from './modules/voice/commands/SetupCommand';
@@ -26,6 +28,9 @@ import { UnblockCommand } from './modules/voice/commands/UnblockCommand';
 import { UnhideCommand } from './modules/voice/commands/UnhideCommand';
 import { UnlockCommand } from './modules/voice/commands/UnlockCommand';
 import { LinkPremiumCommand } from './modules/subscriptions/commands/LinkPremiumCommand';
+import { MovieCommand } from './modules/cinema/commands/MovieCommand';
+import { SessionCommand } from './modules/cinema/commands/SessionCommand';
+import { HistoryCommand } from './modules/cinema/commands/HistoryCommand';
 
 async function bootstrap() {
   try {
@@ -39,6 +44,8 @@ async function bootstrap() {
     const channelDeleteHandler = container.resolve(ChannelDeleteHandler);
     const interactionCreateHandler = container.resolve(InteractionCreateHandler);
     const guildCreateHandler = container.resolve(GuildCreateHandler);
+    const guildScheduledEventHandler = container.resolve(GuildScheduledEventHandler);
+    const cinemaSessionCron = container.resolve(CinemaSessionCron);
 
     const commands = [
       container.resolve(PresetsCommand),
@@ -57,6 +64,9 @@ async function bootstrap() {
       container.resolve(UnhideCommand),
       container.resolve(UnlockCommand),
       container.resolve(LinkPremiumCommand),
+      container.resolve(MovieCommand),
+      container.resolve(SessionCommand),
+      container.resolve(HistoryCommand),
     ];
 
     commandHandler.registerCommands(commands);
@@ -65,6 +75,8 @@ async function bootstrap() {
     channelDeleteHandler.setup(client);
     interactionCreateHandler.setup(client);
     guildCreateHandler.setup(client);
+    guildScheduledEventHandler.setup(client);
+    cinemaSessionCron.setup(client);
 
     client.on('ready', () => {
       logger.info('Bot is ready', {

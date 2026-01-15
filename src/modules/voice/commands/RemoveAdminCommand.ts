@@ -7,7 +7,7 @@ import { DiscordHelper } from '../../../shared/discord/DiscordHelper';
 
 @injectable()
 export class RemoveAdminCommand extends CommandBase {
-  readonly name = 'emoveadmin';
+  readonly name = 'removeadmin';
   readonly description = 'Temporary channels • Remove an admin from your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;

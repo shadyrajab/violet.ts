@@ -10,11 +10,15 @@ import { VoiceProfile } from '../../modules/voice/entities/VoiceProfile';
 import { Preset } from '../../modules/presets/entities/Preset';
 import { Subscription } from '../../modules/subscriptions/entities/Subscription';
 import { UserServerSubscription } from '../../modules/subscriptions/entities/UserServerSubscription';
+import { CinemaSession } from '../../modules/cinema/entities/CinemaSession';
+import { CinemaSessionRating } from '../../modules/cinema/entities/CinemaSessionRating';
 
 import { CreateCoreTables1736734600000 } from '../../migrations/1736734600000-CreateCoreTables';
 import { CreateMigrationsTable1736734700000 } from '../../migrations/1736734700000-CreateMigrationsTable';
 import { CreateVoiceProfiles1736734800000 } from '../../migrations/1736734800000-CreateVoiceProfiles';
 import { SeedDefaultSubscription1736734900000 } from '../../migrations/1736734900000-SeedDefaultSubscription';
+import { CreateUserServerSubscriptions1736735000000 } from '../../migrations/1736735000000-CreateUserServerSubscriptions';
+import { CreateCinemaTables1736735100000 } from '../../migrations/1736735100000-CreateCinemaTables';
 
 @singleton()
 export class Database {
@@ -40,13 +44,17 @@ export class Database {
           VoiceProfile,
           Preset,
           Subscription,
-          UserServerSubscription
+          UserServerSubscription,
+          CinemaSession,
+          CinemaSessionRating
         ],
         migrations: [
           CreateCoreTables1736734600000,
           CreateMigrationsTable1736734700000,
           CreateVoiceProfiles1736734800000,
-          SeedDefaultSubscription1736734900000
+          SeedDefaultSubscription1736734900000,
+          CreateUserServerSubscriptions1736735000000,
+          CreateCinemaTables1736735100000
         ],
         migrationsRun: true,
         synchronize: false,

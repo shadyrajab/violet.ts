@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import { Repository } from 'typeorm';
-import { VoiceProfile } from '../entities/VoiceProfile';
+import { VoiceProfile, ProfileType } from '../entities/VoiceProfile';
 
 @injectable()
 export class VoiceProfileRepository {
@@ -46,5 +46,18 @@ export class VoiceProfileRepository {
 
   async findActiveByJoinChannel(joinChannelId: string): Promise<VoiceProfile | null> {
     return this.repository.findOne({ where: { joinChannelId, isActive: true } });
+  }
+
+  async findByGuildAndType(guildId: string, profileType: ProfileType): Promise<VoiceProfile[]> {
+    return this.repository.find({
+      where: { guildId, profileType, isActive: true },
+      order: { createdAt: 'DESC' }
+    });
+  }
+
+  async findCinemaProfile(guildId: string): Promise<VoiceProfile | null> {
+    return this.repository.findOne({
+      where: { guildId, profileType: 'cinema', isActive: true }
+    });
   }
 }

@@ -3,7 +3,7 @@ import { Guild, ChannelType, PermissionFlagsBits } from 'discord.js';
 import { VoiceProfileRepository } from '../repositories/VoiceProfileRepository';
 import { SubscriptionService } from '../../subscriptions/services/SubscriptionService';
 import { ServerService } from '../../servers/services/ServerService';
-import { VoiceProfile } from '../entities/VoiceProfile';
+import { VoiceProfile, ProfileType } from '../entities/VoiceProfile';
 import { Logger } from '../../../core/logger';
 import { Observability } from '../../../core/observability';
 import { t } from '../../../core/i18n';
@@ -44,7 +44,8 @@ export class VoiceProfileService {
   async createProfile(
     guild: Guild,
     ownerId: string,
-    profileName: string
+    profileName: string,
+    profileType: ProfileType = 'voice'
   ): Promise<VoiceProfile> {
     return await Observability.executeWithSpan(
       'voice_profile.create',
@@ -60,47 +61,54 @@ export class VoiceProfileService {
             throw new Error(reason || 'Cannot create profile');
           }
 
-      const serverLocale = await this.serverService.getServerLanguage(guild.id);
+          const serverLocale = await this.serverService.getServerLanguage(guild.id);
 
-      const category = await guild.channels.create({
-        name: profileName,
-        type: ChannelType.GuildCategory,
-        permissionOverwrites: [
-          {
-            id: guild.id,
-            allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect]
-          }
-        ]
-      });
+          const category = await guild.channels.create({
+            name: profileName,
+            type: ChannelType.GuildCategory,
+            permissionOverwrites: [
+              {
+                id: guild.id,
+                allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect]
+              }
+            ]
+          });
 
-      const joinChannel = await guild.channels.create({
-        name: t('setup.joinChannelName', undefined, serverLocale),
-        type: ChannelType.GuildVoice,
-        parent: category.id,
-        permissionOverwrites: [
-          {
-            id: guild.id,
-            allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect]
-          }
-        ]
-      });
+          const channelName = profileType === 'cinema'
+            ? 'Sessions'
+            : t('setup.joinChannelName', undefined, serverLocale);
 
-      const profile = VoiceProfile.create(
-        guild.id,
-        ownerId,
-        profileName,
-        category.id,
-        joinChannel.id
-      );
+          const joinChannel = await guild.channels.create({
+            name: channelName,
+            type: ChannelType.GuildVoice,
+            parent: category.id,
+            permissionOverwrites: [
+              {
+                id: guild.id,
+                allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect]
+              }
+            ]
+          });
+          const joinChannelId = joinChannel.id;
 
-      const created = await this.profileRepository.create(profile);
+          const profile = VoiceProfile.create(
+            guild.id,
+            ownerId,
+            profileName,
+            category.id,
+            joinChannelId,
+            profileType
+          );
 
-      this.logger.info('Voice profile created', {
-        profileId: created.id,
-        guildId: guild.id,
-        ownerId,
-        profileName
-      });
+          const created = await this.profileRepository.create(profile);
+
+          this.logger.info('Voice profile created', {
+            profileId: created.id,
+            guildId: guild.id,
+            ownerId,
+            profileName,
+            profileType
+          });
 
           return created;
         } catch (error) {
@@ -242,6 +250,15 @@ export class VoiceProfileService {
       this.logger.info('Voice profile deleted from database', { profileId });
     } catch (error) {
       this.logger.error('Error deleting profile from database', error as Error, { profileId });
+      throw error;
+    }
+  }
+
+  async getCinemaProfile(guildId: string): Promise<VoiceProfile | null> {
+    try {
+      return await this.profileRepository.findCinemaProfile(guildId);
+    } catch (error) {
+      this.logger.error('Error getting cinema profile', error as Error, { guildId });
       throw error;
     }
   }

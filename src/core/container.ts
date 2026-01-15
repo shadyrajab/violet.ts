@@ -33,10 +33,18 @@ import { SubscriptionRepository } from '../modules/subscriptions/repositories/Su
 import { UserServerSubscriptionRepository } from '../modules/subscriptions/repositories/UserServerSubscriptionRepository';
 import { SubscriptionService } from '../modules/subscriptions/services/SubscriptionService';
 
+import { TheMovieDBService } from '../modules/cinema/services/TheMovieDBService';
+import { CinemaSession } from '../modules/cinema/entities/CinemaSession';
+import { CinemaSessionRating } from '../modules/cinema/entities/CinemaSessionRating';
+import { CinemaSessionRepository } from '../modules/cinema/repositories/CinemaSessionRepository';
+import { CinemaSessionRatingRepository } from '../modules/cinema/repositories/CinemaSessionRatingRepository';
+import { CinemaSessionService } from '../modules/cinema/services/CinemaSessionService';
+
 import { CommandHandler } from '../shared/discord/CommandHandler';
 import { VoiceStateUpdateHandler } from '../events/VoiceStateUpdateHandler';
 import { ChannelDeleteHandler } from '../events/ChannelDeleteHandler';
 import { InteractionCreateHandler } from '../events/InteractionCreateHandler';
+import { GuildScheduledEventHandler } from '../events/GuildScheduledEventHandler';
 
 export async function setupContainer(): Promise<void> {
   container.registerSingleton(Logger);
@@ -54,6 +62,8 @@ export async function setupContainer(): Promise<void> {
   container.registerInstance('PresetRepository', dataSource.getRepository(Preset));
   container.registerInstance('SubscriptionRepository', dataSource.getRepository(Subscription));
   container.registerInstance('UserServerSubscriptionRepository', dataSource.getRepository(UserServerSubscription));
+  container.registerInstance('CinemaSessionRepository', dataSource.getRepository(CinemaSession));
+  container.registerInstance('CinemaSessionRatingRepository', dataSource.getRepository(CinemaSessionRating));
 
   container.registerSingleton(UserRepository);
   container.registerSingleton(UserService);
@@ -77,12 +87,18 @@ export async function setupContainer(): Promise<void> {
   container.registerSingleton(UserServerSubscriptionRepository);
   container.registerSingleton(SubscriptionService);
 
+  container.registerSingleton(TheMovieDBService);
+  container.registerSingleton(CinemaSessionRepository);
+  container.registerSingleton(CinemaSessionRatingRepository);
+  container.registerSingleton(CinemaSessionService);
+
   const discordClient = new Client({
     intents: [
       GatewayIntentBits.Guilds,
       GatewayIntentBits.GuildVoiceStates,
       GatewayIntentBits.GuildMembers,
-      GatewayIntentBits.GuildMessages
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.GuildScheduledEvents
     ]
   });
 
@@ -92,6 +108,7 @@ export async function setupContainer(): Promise<void> {
   container.registerSingleton(VoiceStateUpdateHandler);
   container.registerSingleton(ChannelDeleteHandler);
   container.registerSingleton(InteractionCreateHandler);
+  container.registerSingleton(GuildScheduledEventHandler);
 }
 
 export { container };

@@ -6,7 +6,7 @@ import { VoiceChannelPermission } from '../../../core/types';
 
 @injectable()
 export class RenameCommand extends CommandBase {
-  readonly name = 'ename';
+  readonly name = 'rename';
   readonly description = 'Temporary channels • Rename your temporary channel.';
   readonly permissions = ['TRCHANNEL_ADMIN' as const];
   readonly guildOnly = true;
