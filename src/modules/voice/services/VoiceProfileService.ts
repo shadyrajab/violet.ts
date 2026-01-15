@@ -2,35 +2,35 @@ import { singleton, inject } from 'tsyringe';
 import { Guild, ChannelType, PermissionFlagsBits } from 'discord.js';
 import { VoiceProfileRepository } from '../repositories/VoiceProfileRepository';
 import { SubscriptionService } from '../../subscriptions/services/SubscriptionService';
+import { ServerService } from '../../servers/services/ServerService';
 import { VoiceProfile } from '../entities/VoiceProfile';
 import { Logger } from '../../../core/logger';
+import { Observability } from '../../../core/observability';
+import { t } from '../../../core/i18n';
 
 @singleton()
 export class VoiceProfileService {
   constructor(
     @inject(VoiceProfileRepository) private profileRepository: VoiceProfileRepository,
     @inject(SubscriptionService) private subscriptionService: SubscriptionService,
+    @inject(ServerService) private serverService: ServerService,
     @inject(Logger) private logger: Logger
   ) {}
 
   async canCreateProfile(userId: string, guildId: string): Promise<{ canCreate: boolean; reason?: string }> {
     try {
-      const subscription = await this.subscriptionService.getUserSubscription(userId);
+      const isServerPremium = await this.subscriptionService.isServerPremium(guildId);
 
-      if (!subscription || !subscription.isActive()) {
-        return { canCreate: false, reason: 'No active subscription found' };
-      }
-
-      if (subscription.isPremium()) {
+      if (isServerPremium) {
         return { canCreate: true };
       }
 
-      const existingProfilesCount = await this.profileRepository.countByOwner(userId, guildId);
+      const existingProfilesCount = await this.profileRepository.countByGuild(guildId);
 
       if (existingProfilesCount >= 1) {
         return {
           canCreate: false,
-          reason: 'Free/Basic users can only create 1 profile. Upgrade to Premium for unlimited profiles.'
+          reason: 'Free servers can only have 1 profile. Link a Premium subscription to this server for unlimited profiles.'
         };
       }
 
@@ -46,19 +46,24 @@ export class VoiceProfileService {
     ownerId: string,
     profileName: string
   ): Promise<VoiceProfile> {
-    try {
-      const existing = await this.profileRepository.findByGuildAndName(guild.id, profileName);
-      if (existing) {
-        throw new Error(`A profile with name "${profileName}" already exists in this server`);
-      }
+    return await Observability.executeWithSpan(
+      'voice_profile.create',
+      async () => {
+        try {
+          const existing = await this.profileRepository.findByGuildAndName(guild.id, profileName);
+          if (existing) {
+            throw new Error(`A profile with name "${profileName}" already exists in this server`);
+          }
 
-      const { canCreate, reason } = await this.canCreateProfile(ownerId, guild.id);
-      if (!canCreate) {
-        throw new Error(reason || 'Cannot create profile');
-      }
+          const { canCreate, reason } = await this.canCreateProfile(ownerId, guild.id);
+          if (!canCreate) {
+            throw new Error(reason || 'Cannot create profile');
+          }
+
+      const serverLocale = await this.serverService.getServerLanguage(guild.id);
 
       const category = await guild.channels.create({
-        name: `📁 ${profileName}`,
+        name: profileName,
         type: ChannelType.GuildCategory,
         permissionOverwrites: [
           {
@@ -69,7 +74,7 @@ export class VoiceProfileService {
       });
 
       const joinChannel = await guild.channels.create({
-        name: 'Entre aqui',
+        name: t('setup.joinChannelName', undefined, serverLocale),
         type: ChannelType.GuildVoice,
         parent: category.id,
         permissionOverwrites: [
@@ -97,15 +102,21 @@ export class VoiceProfileService {
         profileName
       });
 
-      return created;
-    } catch (error) {
-      this.logger.error('Error creating voice profile', error as Error, {
-        guildId: guild.id,
-        ownerId,
-        profileName
-      });
-      throw error;
-    }
+          return created;
+        } catch (error) {
+          this.logger.error('Error creating voice profile', error as Error, {
+            guildId: guild.id,
+            ownerId,
+            profileName
+          });
+          Observability.captureError(error as Error, { guildId: guild.id, ownerId, profileName });
+          throw error;
+        }
+      },
+      'db',
+      'voice_profile',
+      'insert'
+    );
   }
 
   async getProfile(profileName: string, guildId: string): Promise<VoiceProfile | null> {
@@ -221,6 +232,16 @@ export class VoiceProfileService {
       return await this.profileRepository.findActiveByJoinChannel(joinChannelId);
     } catch (error) {
       this.logger.error('Error getting profile by join channel', error as Error, { joinChannelId });
+      throw error;
+    }
+  }
+
+  async deleteProfileFromDb(profileId: string): Promise<void> {
+    try {
+      await this.profileRepository.delete(profileId);
+      this.logger.info('Voice profile deleted from database', { profileId });
+    } catch (error) {
+      this.logger.error('Error deleting profile from database', error as Error, { profileId });
       throw error;
     }
   }

@@ -1,16 +1,18 @@
 import {
   ChatInputCommandInteraction,
+  AutocompleteInteraction,
   SlashCommandBuilder,
   SlashCommandSubcommandsOnlyBuilder,
   PermissionsBitField
 } from 'discord.js';
-import { Language } from '../../core/types';
+import { Locale, t } from '../../core/i18n';
 
 export type CommandPermission = 'TRCHANNEL_OWNER' | 'TRCHANNEL_ADMIN' | keyof typeof PermissionsBitField.Flags;
 
 export interface CommandExecuteContext {
   interaction: ChatInputCommandInteraction;
-  language: Language;
+  locale: Locale;
+  t: typeof t;
 }
 
 export abstract class CommandBase {
@@ -22,6 +24,8 @@ export abstract class CommandBase {
   abstract buildCommand(): SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
 
   abstract execute(context: CommandExecuteContext): Promise<void>;
+
+  handleAutocomplete?(interaction: AutocompleteInteraction): Promise<void>;
 
   toJSON(): unknown {
     return this.buildCommand().toJSON();

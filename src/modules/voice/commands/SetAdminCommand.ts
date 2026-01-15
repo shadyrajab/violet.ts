@@ -4,8 +4,6 @@ import { CommandBase, CommandExecuteContext } from '../../../shared/discord/Comm
 import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
 import { DiscordHelper } from '../../../shared/discord/DiscordHelper';
-import { memberNotFound } from '../../../shared/translations/temporarychannels/globalMessages';
-import { traddMemberReply } from '../../../shared/translations/temporarychannels/traddMessages';
 
 @injectable()
 export class SetAdminCommand extends CommandBase {
@@ -34,7 +32,7 @@ export class SetAdminCommand extends CommandBase {
   }
 
   async execute(context: CommandExecuteContext): Promise<void> {
-    const { interaction, language } = context;
+    const { interaction, t } = context;
     const member = interaction.member as GuildMember;
     const channel = member.voice.channel as VoiceChannel;
 
@@ -46,7 +44,7 @@ export class SetAdminCommand extends CommandBase {
 
     if (!members.length) {
       await interaction.reply({
-        content: memberNotFound(language),
+        content: t('errors.memberNotFound'),
         ephemeral: true
       });
       return;
@@ -61,7 +59,7 @@ export class SetAdminCommand extends CommandBase {
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: traddMemberReply(language, members.join(', ')) })
+      .addFields({ name: '\u200B', value: t('voice.messages.adminAdded', { username: members.join(', ') }) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 
@@ -69,7 +67,7 @@ export class SetAdminCommand extends CommandBase {
 
     if (notFound) {
       await interaction.followUp({
-        content: memberNotFound(language),
+        content: t('errors.memberNotFound'),
         ephemeral: true
       });
     }

@@ -1,7 +1,7 @@
 import { singleton, inject } from 'tsyringe';
 import { Repository } from 'typeorm';
 import { User } from '../entities/User';
-import { Language } from '../../../core/types';
+import { Locale, DEFAULT_LOCALE } from '../../../core/i18n';
 
 @singleton()
 export class UserRepository {
@@ -15,7 +15,7 @@ export class UserRepository {
     });
   }
 
-  async create(userId: string, language: Language = 'english'): Promise<User> {
+  async create(userId: string, language: Locale = DEFAULT_LOCALE): Promise<User> {
     const user = new User();
     user.userId = userId;
     user.language = language;
@@ -23,7 +23,7 @@ export class UserRepository {
     return await this.repository.save(user);
   }
 
-  async updateLanguage(userId: string, language: Language): Promise<User | null> {
+  async updateLanguage(userId: string, language: Locale): Promise<User | null> {
     const user = await this.findById(userId);
     if (!user) {
       return null;
@@ -33,7 +33,7 @@ export class UserRepository {
     return await this.repository.save(user);
   }
 
-  async findOrCreate(userId: string, defaultLanguage: Language = 'english'): Promise<User> {
+  async findOrCreate(userId: string, defaultLanguage: Locale = DEFAULT_LOCALE): Promise<User> {
     const existing = await this.findById(userId);
     if (existing) {
       return existing;

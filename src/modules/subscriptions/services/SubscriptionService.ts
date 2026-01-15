@@ -98,4 +98,42 @@ export class SubscriptionService {
       return false;
     }
   }
+
+  async getServerSubscription(serverId: string): Promise<Subscription | null> {
+    try {
+      const links = await this.userServerRepository.findByServer(serverId);
+      if (links.length === 0) {
+        return null;
+      }
+
+      const subscription = await this.subscriptionRepository.findById(links[0].subscriptionId);
+      return subscription;
+    } catch (error) {
+      this.logger.error('Failed to get server subscription', error as Error, { serverId });
+      return null;
+    }
+  }
+
+  async isServerPremium(serverId: string): Promise<boolean> {
+    try {
+      const subscription = await this.getServerSubscription(serverId);
+      return subscription !== null && subscription.isActive() && subscription.isPremium();
+    } catch (error) {
+      this.logger.error('Failed to check server premium status', error as Error, { serverId });
+      return false;
+    }
+  }
+
+  async upgradeToPremium(subscriptionId: string, expiresAt: Date): Promise<Subscription | null> {
+    try {
+      const subscription = await this.subscriptionRepository.updatePlan(subscriptionId, 'premium', expiresAt);
+      if (subscription) {
+        this.logger.info('Subscription upgraded to premium', { subscriptionId });
+      }
+      return subscription;
+    } catch (error) {
+      this.logger.error('Failed to upgrade subscription to premium', error as Error, { subscriptionId });
+      throw error;
+    }
+  }
 }

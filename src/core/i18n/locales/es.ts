@@ -1,0 +1,131 @@
+import { TranslationSchema } from '../types';
+
+export const es: TranslationSchema = {
+  common: {
+    yes: 'Sí',
+    no: 'No',
+    none: 'Ninguno',
+    error: 'Error',
+    success: 'Éxito',
+    loading: 'Cargando...',
+    cancel: 'Cancelar',
+    confirm: 'Confirmar',
+    delete: 'Eliminar',
+    save: 'Guardar',
+    edit: 'Editar',
+    add: 'Añadir',
+    remove: 'Quitar',
+    back: 'Volver',
+    next: 'Siguiente',
+    previous: 'Anterior',
+    close: 'Cerrar',
+    more: 'más'
+  },
+  errors: {
+    generic: 'Se produjo un error al procesar tu solicitud.',
+    userNotFound: 'No se pudo encontrar al usuario **{username}**.',
+    memberNotFound: 'Uno de los usuarios especificados no fue encontrado. Asegúrate de que el ID o nombre de usuario sea correcto.',
+    dataNotFound: 'No se encontraron datos para este usuario.',
+    permissionsRemoved: 'Mis permisos necesarios han sido eliminados. Por favor, otórgame el permiso de `Administrador` para realizar esta acción.',
+    onlyGuilds: 'Este comando solo está disponible en servidores.',
+    unavailableCommand: 'Este comando no está disponible temporalmente.',
+    needPermission: 'Necesitas el permiso `{permission}` para usar este comando.',
+    notAdmin: 'Necesitas ser administrador o dueño del canal para usar este comando.',
+    notOwner: 'Solo el dueño del canal puede usar este comando.',
+    notConnected: 'No estás conectado a un canal temporal.',
+    simultaneousChannelLimit: 'Solo puedes crear hasta `2` canales simultáneos.',
+    characterLimitReached: 'El nombre del canal no puede superar **{limit}** caracteres.'
+  },
+  voice: {
+    channel: {
+      locked: 'Bloqueado',
+      unlocked: 'Desbloqueado',
+      hidden: 'Oculto',
+      visible: 'Visible',
+      renamed: 'Renombrado'
+    },
+    controlPanel: {
+      title: 'Panel de Control del Canal de Voz',
+      channelLabel: 'Canal',
+      ownerLabel: 'Dueño',
+      statusLabel: 'Estado del Canal',
+      adminsLabel: 'Admins',
+      allowedMembersLabel: 'Miembros Permitidos',
+      blockedMembersLabel: 'Miembros Bloqueados',
+      quickActionsLabel: 'Acciones Rápidas',
+      quickActionsValue: 'Usa los botones de abajo para administrar tu canal',
+      footer: 'Violet Bot'
+    },
+    buttons: {
+      lock: 'Bloquear',
+      unlock: 'Desbloquear',
+      hide: 'Ocultar',
+      unhide: 'Mostrar',
+      rename: 'Renombrar',
+      invite: 'Invitar',
+      kick: 'Expulsar',
+      setAdmin: 'Hacer Admin'
+    },
+    modals: {
+      renameTitle: 'Renombrar Canal de Voz',
+      renameLabel: 'Nuevo Nombre del Canal',
+      renamePlaceholder: 'Ingresa el nuevo nombre del canal',
+      inviteTitle: 'Invitar Miembro',
+      inviteLabel: 'ID, nombre de usuario o @mención',
+      invitePlaceholder: 'Ingresa ID, nombre de usuario o @mención',
+      kickTitle: 'Expulsar Miembro',
+      kickLabel: 'ID, nombre de usuario o @mención',
+      kickPlaceholder: 'Ingresa ID, nombre de usuario o @mención',
+      setAdminTitle: 'Hacer Admin',
+      setAdminLabel: 'ID, nombre de usuario o @mención',
+      setAdminPlaceholder: 'Ingresa ID, nombre de usuario o @mención'
+    },
+    messages: {
+      channelLocked: 'El canal ha sido bloqueado.',
+      channelUnlocked: 'El canal ha sido desbloqueado.',
+      channelHidden: 'El canal ha sido ocultado de la lista de canales.',
+      channelVisible: 'El canal ahora es visible en la lista de canales.',
+      channelRenamed: 'Canal renombrado a **{name}**.',
+      memberInvited: '**{username}** ha sido invitado al canal.',
+      memberKicked: '**{username}** ha sido expulsado del canal.',
+      adminAdded: '**{username}** ha sido establecido como admin.',
+      adminRemoved: '**{username}** ha sido removido como admin.',
+      memberAdded: 'Has añadido a {members} a tu canal. Usa **/remove** para quitarlos.',
+      memberRemoved: 'Has quitado a {members} de tu canal.',
+      memberBlocked: 'Has bloqueado a {members} de tu canal. Usa **/unblock** para desbloquearlos.',
+      memberUnblocked: 'Has desbloqueado a {members} de tu canal.',
+      cannotKickOwner: 'No puedes expulsar al dueño del canal.',
+      userNotFoundInChannel: 'No se pudo encontrar al usuario especificado en este canal.'
+    }
+  },
+  setup: {
+    activated: '¡Sistema de salas temporales activado con éxito!',
+    alreadyActivated: 'El sistema de salas temporales ya está activado.',
+    disabled: '¡Sistema de salas temporales desactivado con éxito!',
+    alreadyDisabled: 'El sistema de salas temporales ya está desactivado.',
+    joinChannelName: 'Entra aquí',
+    memberJoined: '{username} se unió al canal',
+    memberLeft: '{username} salió del canal'
+  },
+  presets: {
+    notFound: 'Aún no tienes un perfil de configuración predeterminada de salas temporales para este servidor. Haz clic en el botón de abajo para crear uno:',
+    created: 'Tu perfil de configuración fue creado con éxito. Usa el comando de nuevo para configurarlo.',
+    limitReached: 'Has alcanzado el límite de 2 preajustes por usuario. Elimina uno para crear otro.',
+    deleted: 'Tus preajustes de salas temporales han sido eliminados.',
+    willBeLocked: 'Tus salas temporales ahora se bloquearán automáticamente.',
+    willBeHidden: 'Tus salas temporales ahora se ocultarán automáticamente.',
+    embedTitle: 'Configuración Predeterminada de Canales Temporales',
+    embedChannelName: 'Nombre del Canal',
+    embedLock: 'Canal Bloqueado',
+    embedHide: 'Canal Oculto',
+    embedMembers: 'Miembros Añadidos',
+    embedAdmins: 'Administradores',
+    embedBlocked: 'Miembros Bloqueados',
+    embedDelete: 'Para eliminar tus preajustes de canal, haz clic en',
+    embedObs: 'Estas configuraciones se aplicarán automáticamente cada vez que\ncrees una nueva sala temporal en este servidor.',
+    whatName: '¿Cuál será el nombre de tus salas?',
+    removeOrAdd: 'Haz clic en los botones para añadir o quitar miembros.',
+    addMember: '¿A quién quieres añadir a tus salas temporales? Menciona o proporciona el ID del usuario/rol.',
+    removeMember: '¿A quién quieres quitar de tus salas temporales? Menciona o proporciona el ID del usuario/rol.'
+  }
+};

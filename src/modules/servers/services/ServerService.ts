@@ -1,7 +1,7 @@
 import { singleton, inject } from 'tsyringe';
 import { ServerRepository } from '../repositories/ServerRepository';
 import { Server } from '../entities/Server';
-import { Language } from '../../../core/types';
+import { Locale, DEFAULT_LOCALE } from '../../../core/i18n';
 import { Logger } from '../../../core/logger';
 import { NotFoundError } from '../../../core/errors';
 
@@ -12,17 +12,17 @@ export class ServerService {
     @inject(Logger) private logger: Logger
   ) {}
 
-  async getServerLanguage(serverId: string): Promise<Language> {
+  async getServerLanguage(serverId: string): Promise<Locale> {
     try {
       const server = await this.serverRepository.findById(serverId);
-      return server?.language ?? 'english';
+      return server?.language ?? DEFAULT_LOCALE;
     } catch (error) {
       this.logger.error('Failed to get server language', error as Error, { serverId });
-      return 'english';
+      return DEFAULT_LOCALE;
     }
   }
 
-  async setServerLanguage(serverId: string, language: Language): Promise<Server> {
+  async setServerLanguage(serverId: string, language: Locale): Promise<Server> {
     try {
       const server = await this.serverRepository.findOrCreate(serverId, language);
 
@@ -39,7 +39,7 @@ export class ServerService {
     }
   }
 
-  async getOrCreateServer(serverId: string, defaultLanguage: Language = 'english'): Promise<Server> {
+  async getOrCreateServer(serverId: string, defaultLanguage: Locale = DEFAULT_LOCALE): Promise<Server> {
     try {
       return await this.serverRepository.findOrCreate(serverId, defaultLanguage);
     } catch (error) {

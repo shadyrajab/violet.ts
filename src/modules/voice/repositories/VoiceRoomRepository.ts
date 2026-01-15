@@ -1,6 +1,7 @@
 import { singleton, inject } from 'tsyringe';
 import { Repository } from 'typeorm';
 import { VoiceRoom } from '../entities/VoiceRoom';
+import { Observability } from '../../../core/observability';
 
 @singleton()
 export class VoiceRoomRepository {
@@ -9,9 +10,13 @@ export class VoiceRoomRepository {
   ) {}
 
   async findByChannelId(channelId: string): Promise<VoiceRoom | null> {
-    return await this.repository.findOne({
-      where: { channelId }
-    });
+    return await Observability.executeWithSpan(
+      'VoiceRoomRepository.findByChannelId',
+      async () => this.repository.findOne({ where: { channelId } }),
+      'db',
+      'typeorm',
+      'query'
+    );
   }
 
   async findByOwnerId(ownerId: string): Promise<VoiceRoom[]> {
@@ -27,12 +32,20 @@ export class VoiceRoomRepository {
   }
 
   async create(channelId: string, ownerId: string, adminIds: string[] = []): Promise<VoiceRoom> {
-    const voiceRoom = new VoiceRoom();
-    voiceRoom.channelId = channelId;
-    voiceRoom.ownerId = ownerId;
-    voiceRoom.adminIds = adminIds;
+    return await Observability.executeWithSpan(
+      'VoiceRoomRepository.create',
+      async () => {
+        const voiceRoom = new VoiceRoom();
+        voiceRoom.channelId = channelId;
+        voiceRoom.ownerId = ownerId;
+        voiceRoom.adminIds = adminIds;
 
-    return await this.repository.save(voiceRoom);
+        return await this.repository.save(voiceRoom);
+      },
+      'db',
+      'typeorm',
+      'insert'
+    );
   }
 
   async updateAdmins(channelId: string, adminIds: string[]): Promise<VoiceRoom | null> {
@@ -46,8 +59,16 @@ export class VoiceRoomRepository {
   }
 
   async delete(channelId: string): Promise<boolean> {
-    const result = await this.repository.delete({ channelId });
-    return (result.affected ?? 0) > 0;
+    return await Observability.executeWithSpan(
+      'VoiceRoomRepository.delete',
+      async () => {
+        const result = await this.repository.delete({ channelId });
+        return (result.affected ?? 0) > 0;
+      },
+      'db',
+      'typeorm',
+      'delete'
+    );
   }
 
   async deleteByOwnerId(ownerId: string): Promise<number> {

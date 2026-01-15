@@ -3,7 +3,6 @@ import { SlashCommandBuilder, EmbedBuilder, GuildMember, VoiceChannel } from 'di
 import { CommandBase, CommandExecuteContext } from '../../../shared/discord/CommandBase';
 import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
-import { trhideReply } from '../../../shared/translations/temporarychannels/trhideMessages';
 
 @injectable()
 export class HideCommand extends CommandBase {
@@ -26,7 +25,7 @@ export class HideCommand extends CommandBase {
   }
 
   async execute(context: CommandExecuteContext): Promise<void> {
-    const { interaction, language } = context;
+    const { interaction, t } = context;
     const member = interaction.member as GuildMember;
     const channel = member.voice.channel as VoiceChannel;
 
@@ -38,7 +37,7 @@ export class HideCommand extends CommandBase {
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: trhideReply(language) })
+      .addFields({ name: '\u200B', value: t('voice.messages.channelHidden') })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 

@@ -1,0 +1,131 @@
+import { TranslationSchema } from '../types';
+
+export const pt: TranslationSchema = {
+  common: {
+    yes: 'Sim',
+    no: 'Não',
+    none: 'Nenhum',
+    error: 'Erro',
+    success: 'Sucesso',
+    loading: 'Carregando...',
+    cancel: 'Cancelar',
+    confirm: 'Confirmar',
+    delete: 'Deletar',
+    save: 'Salvar',
+    edit: 'Editar',
+    add: 'Adicionar',
+    remove: 'Remover',
+    back: 'Voltar',
+    next: 'Próximo',
+    previous: 'Anterior',
+    close: 'Fechar',
+    more: 'mais'
+  },
+  errors: {
+    generic: 'Ocorreu um erro ao processar sua solicitação.',
+    userNotFound: 'Não foi possível encontrar o usuário **{username}**.',
+    memberNotFound: 'Um dos usuários especificados não foi encontrado. Certifique-se de que o ID ou nome de usuário está correto.',
+    dataNotFound: 'Nenhum dado encontrado para este usuário.',
+    permissionsRemoved: 'Minhas permissões necessárias foram removidas. Por favor, conceda-me a permissão de `Administrador` para realizar esta ação.',
+    onlyGuilds: 'Este comando só está disponível em servidores.',
+    unavailableCommand: 'Este comando está temporariamente indisponível.',
+    needPermission: 'Você precisa da permissão `{permission}` para usar este comando.',
+    notAdmin: 'Você precisa ser administrador ou dono do canal para usar este comando.',
+    notOwner: 'Somente o dono do canal pode usar este comando.',
+    notConnected: 'Você não está conectado a um canal temporário.',
+    simultaneousChannelLimit: 'Você só pode criar até `2` canais simultâneos.',
+    characterLimitReached: 'O nome do canal não pode ultrapassar **{limit}** caracteres.'
+  },
+  voice: {
+    channel: {
+      locked: 'Trancado',
+      unlocked: 'Destrancado',
+      hidden: 'Oculto',
+      visible: 'Visível',
+      renamed: 'Renomeado'
+    },
+    controlPanel: {
+      title: 'Painel de Controle do Canal de Voz',
+      channelLabel: 'Canal',
+      ownerLabel: 'Dono',
+      statusLabel: 'Status do Canal',
+      adminsLabel: 'Admins',
+      allowedMembersLabel: 'Membros Permitidos',
+      blockedMembersLabel: 'Membros Bloqueados',
+      quickActionsLabel: 'Ações Rápidas',
+      quickActionsValue: 'Use os botões abaixo para gerenciar seu canal',
+      footer: 'Violet Bot'
+    },
+    buttons: {
+      lock: 'Trancar',
+      unlock: 'Destrancar',
+      hide: 'Ocultar',
+      unhide: 'Mostrar',
+      rename: 'Renomear',
+      invite: 'Convidar',
+      kick: 'Expulsar',
+      setAdmin: 'Definir Admin'
+    },
+    modals: {
+      renameTitle: 'Renomear Canal de Voz',
+      renameLabel: 'Novo Nome do Canal',
+      renamePlaceholder: 'Digite o novo nome do canal',
+      inviteTitle: 'Convidar Membro',
+      inviteLabel: 'ID, nome de usuário ou @menção',
+      invitePlaceholder: 'Digite o ID, nome de usuário ou @menção',
+      kickTitle: 'Expulsar Membro',
+      kickLabel: 'ID, nome de usuário ou @menção',
+      kickPlaceholder: 'Digite o ID, nome de usuário ou @menção',
+      setAdminTitle: 'Definir Admin',
+      setAdminLabel: 'ID, nome de usuário ou @menção',
+      setAdminPlaceholder: 'Digite o ID, nome de usuário ou @menção'
+    },
+    messages: {
+      channelLocked: 'O canal foi trancado.',
+      channelUnlocked: 'O canal foi destrancado.',
+      channelHidden: 'O canal foi ocultado da lista de canais.',
+      channelVisible: 'O canal agora está visível na lista de canais.',
+      channelRenamed: 'Canal renomeado para **{name}**.',
+      memberInvited: '**{username}** foi convidado para o canal.',
+      memberKicked: '**{username}** foi expulso do canal.',
+      adminAdded: '**{username}** foi definido como admin.',
+      adminRemoved: '**{username}** foi removido como admin.',
+      memberAdded: 'Você adicionou {members} ao seu canal. Use **/remove** para removê-los.',
+      memberRemoved: 'Você removeu {members} do seu canal.',
+      memberBlocked: 'Você bloqueou {members} do seu canal. Use **/unblock** para desbloqueá-los.',
+      memberUnblocked: 'Você desbloqueou {members} do seu canal.',
+      cannotKickOwner: 'Você não pode expulsar o dono do canal.',
+      userNotFoundInChannel: 'Não foi possível encontrar o usuário especificado neste canal.'
+    }
+  },
+  setup: {
+    activated: 'Sistema de salas temporárias ativado com sucesso!',
+    alreadyActivated: 'O sistema de salas temporárias já está ativado.',
+    disabled: 'Sistema de salas temporárias desativado com sucesso!',
+    alreadyDisabled: 'O sistema de salas temporárias já está desativado.',
+    joinChannelName: 'Entre aqui',
+    memberJoined: '{username} entrou no canal',
+    memberLeft: '{username} saiu do canal'
+  },
+  presets: {
+    notFound: 'Você ainda não possui um perfil de configuração padrão de salas temporárias para este servidor. Clique no botão abaixo para criar um:',
+    created: 'Seu perfil de configuração foi criado com sucesso. Use o comando novamente para configurá-lo.',
+    limitReached: 'Você atingiu o limite de 2 predefinições por usuário. Delete uma para criar outra.',
+    deleted: 'Suas predefinições de salas temporárias foram deletadas.',
+    willBeLocked: 'Suas salas temporárias agora serão trancadas automaticamente.',
+    willBeHidden: 'Suas salas temporárias agora serão ocultadas automaticamente.',
+    embedTitle: 'Configuração Padrão de Canais Temporários',
+    embedChannelName: 'Nome do Canal',
+    embedLock: 'Canal Trancado',
+    embedHide: 'Canal Oculto',
+    embedMembers: 'Membros Adicionados',
+    embedAdmins: 'Administradores',
+    embedBlocked: 'Membros Bloqueados',
+    embedDelete: 'Para deletar suas predefinições de canal, clique em',
+    embedObs: 'Essas configurações serão aplicadas automaticamente sempre que\nvocê criar uma nova sala temporária neste servidor.',
+    whatName: 'Qual será o nome das suas salas?',
+    removeOrAdd: 'Clique nos botões para adicionar ou remover membros.',
+    addMember: 'Quem você deseja adicionar às suas salas temporárias? Mencione ou informe o ID do usuário/cargo.',
+    removeMember: 'Quem você deseja remover das suas salas temporárias? Mencione ou informe o ID do usuário/cargo.'
+  }
+};

@@ -3,8 +3,6 @@ import { SlashCommandBuilder, EmbedBuilder, GuildMember, VoiceChannel } from 'di
 import { CommandBase, CommandExecuteContext } from '../../../shared/discord/CommandBase';
 import { VoicePermissionService } from '../services/VoicePermissionService';
 import { VoiceChannelPermission } from '../../../core/types';
-import { charactersLimitReached } from '../../../shared/translations/temporarychannels/globalMessages';
-import { trenameReply } from '../../../shared/translations/temporarychannels/trenameMessages';
 
 @injectable()
 export class RenameCommand extends CommandBase {
@@ -33,7 +31,7 @@ export class RenameCommand extends CommandBase {
   }
 
   async execute(context: CommandExecuteContext): Promise<void> {
-    const { interaction, language } = context;
+    const { interaction, t } = context;
     const member = interaction.member as GuildMember;
     const channel = member.voice.channel as VoiceChannel;
 
@@ -41,7 +39,7 @@ export class RenameCommand extends CommandBase {
 
     if (newName.length > 20) {
       await interaction.reply({
-        content: charactersLimitReached(language, 20),
+        content: t('errors.characterLimitReached', { limit: 20 }),
         ephemeral: true
       });
       return;
@@ -57,7 +55,7 @@ export class RenameCommand extends CommandBase {
     const embed = new EmbedBuilder()
       .setColor('#96879d')
       .setAuthor({ name: channel.name, iconURL: member.user.avatarURL() || undefined })
-      .addFields({ name: '\u200B', value: trenameReply(language, newName) })
+      .addFields({ name: '\u200B', value: t('voice.messages.channelRenamed', { name: newName }) })
       .setTimestamp(Date.now())
       .setImage('https://i.imgur.com/dnwiwSz.png');
 

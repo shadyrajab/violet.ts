@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { container } from 'tsyringe';
 import { Client, GatewayIntentBits } from 'discord.js';
-import { Config } from './config';
 import { Logger } from './logger';
 import { Database } from './database';
 
@@ -40,7 +39,6 @@ import { ChannelDeleteHandler } from '../events/ChannelDeleteHandler';
 import { InteractionCreateHandler } from '../events/InteractionCreateHandler';
 
 export async function setupContainer(): Promise<void> {
-  container.registerSingleton(Config);
   container.registerSingleton(Logger);
   container.registerSingleton(Database);
 

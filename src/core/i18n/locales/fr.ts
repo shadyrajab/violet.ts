@@ -1,0 +1,131 @@
+import { TranslationSchema } from '../types';
+
+export const fr: TranslationSchema = {
+  common: {
+    yes: 'Oui',
+    no: 'Non',
+    none: 'Aucun',
+    error: 'Erreur',
+    success: 'Succès',
+    loading: 'Chargement...',
+    cancel: 'Annuler',
+    confirm: 'Confirmer',
+    delete: 'Supprimer',
+    save: 'Sauvegarder',
+    edit: 'Modifier',
+    add: 'Ajouter',
+    remove: 'Retirer',
+    back: 'Retour',
+    next: 'Suivant',
+    previous: 'Précédent',
+    close: 'Fermer',
+    more: 'plus'
+  },
+  errors: {
+    generic: 'Une erreur est survenue lors du traitement de votre demande.',
+    userNotFound: "Impossible de trouver l'utilisateur **{username}**.",
+    memberNotFound: "L'un des utilisateurs spécifiés n'a pas été trouvé. Assurez-vous que l'ID ou le nom d'utilisateur est correct.",
+    dataNotFound: 'Aucune donnée trouvée pour cet utilisateur.',
+    permissionsRemoved: "Mes permissions nécessaires ont été supprimées. Veuillez m'accorder la permission `Administrateur` pour effectuer cette action.",
+    onlyGuilds: 'Cette commande est uniquement disponible sur les serveurs.',
+    unavailableCommand: 'Cette commande est temporairement indisponible.',
+    needPermission: 'Vous avez besoin de la permission `{permission}` pour utiliser cette commande.',
+    notAdmin: 'Vous devez être administrateur ou propriétaire du salon pour utiliser cette commande.',
+    notOwner: 'Seul le propriétaire du salon peut utiliser cette commande.',
+    notConnected: "Vous n'êtes pas connecté à un salon temporaire.",
+    simultaneousChannelLimit: 'Vous ne pouvez créer que `2` salons simultanés maximum.',
+    characterLimitReached: 'Le nom du salon ne peut pas dépasser **{limit}** caractères.'
+  },
+  voice: {
+    channel: {
+      locked: 'Verrouillé',
+      unlocked: 'Déverrouillé',
+      hidden: 'Masqué',
+      visible: 'Visible',
+      renamed: 'Renommé'
+    },
+    controlPanel: {
+      title: 'Panneau de Contrôle du Salon Vocal',
+      channelLabel: 'Salon',
+      ownerLabel: 'Propriétaire',
+      statusLabel: 'État du Salon',
+      adminsLabel: 'Admins',
+      allowedMembersLabel: 'Membres Autorisés',
+      blockedMembersLabel: 'Membres Bloqués',
+      quickActionsLabel: 'Actions Rapides',
+      quickActionsValue: 'Utilisez les boutons ci-dessous pour gérer votre salon',
+      footer: 'Violet Bot'
+    },
+    buttons: {
+      lock: 'Verrouiller',
+      unlock: 'Déverrouiller',
+      hide: 'Masquer',
+      unhide: 'Afficher',
+      rename: 'Renommer',
+      invite: 'Inviter',
+      kick: 'Expulser',
+      setAdmin: 'Définir Admin'
+    },
+    modals: {
+      renameTitle: 'Renommer le Salon Vocal',
+      renameLabel: 'Nouveau Nom du Salon',
+      renamePlaceholder: 'Entrez le nouveau nom du salon',
+      inviteTitle: 'Inviter un Membre',
+      inviteLabel: "ID, nom d'utilisateur ou @mention",
+      invitePlaceholder: "Entrez l'ID, le nom d'utilisateur ou @mention",
+      kickTitle: 'Expulser un Membre',
+      kickLabel: "ID, nom d'utilisateur ou @mention",
+      kickPlaceholder: "Entrez l'ID, le nom d'utilisateur ou @mention",
+      setAdminTitle: 'Définir Admin',
+      setAdminLabel: "ID, nom d'utilisateur ou @mention",
+      setAdminPlaceholder: "Entrez l'ID, le nom d'utilisateur ou @mention"
+    },
+    messages: {
+      channelLocked: 'Le salon a été verrouillé.',
+      channelUnlocked: 'Le salon a été déverrouillé.',
+      channelHidden: 'Le salon a été masqué de la liste des salons.',
+      channelVisible: 'Le salon est maintenant visible dans la liste des salons.',
+      channelRenamed: 'Salon renommé en **{name}**.',
+      memberInvited: '**{username}** a été invité au salon.',
+      memberKicked: '**{username}** a été expulsé du salon.',
+      adminAdded: '**{username}** a été défini comme admin.',
+      adminRemoved: '**{username}** a été retiré des admins.',
+      memberAdded: 'Vous avez ajouté {members} à votre salon. Utilisez **/remove** pour les retirer.',
+      memberRemoved: 'Vous avez retiré {members} de votre salon.',
+      memberBlocked: 'Vous avez bloqué {members} de votre salon. Utilisez **/unblock** pour les débloquer.',
+      memberUnblocked: 'Vous avez débloqué {members} de votre salon.',
+      cannotKickOwner: 'Vous ne pouvez pas expulser le propriétaire du salon.',
+      userNotFoundInChannel: "Impossible de trouver l'utilisateur spécifié dans ce salon."
+    }
+  },
+  setup: {
+    activated: 'Système de salons temporaires activé avec succès !',
+    alreadyActivated: 'Le système de salons temporaires est déjà activé.',
+    disabled: 'Système de salons temporaires désactivé avec succès !',
+    alreadyDisabled: 'Le système de salons temporaires est déjà désactivé.',
+    joinChannelName: 'Rejoindre ici',
+    memberJoined: '{username} a rejoint le canal',
+    memberLeft: '{username} a quitté le canal'
+  },
+  presets: {
+    notFound: "Vous n'avez pas encore de profil de configuration par défaut pour les salons temporaires sur ce serveur. Cliquez sur le bouton ci-dessous pour en créer un :",
+    created: 'Votre profil de configuration a été créé avec succès. Utilisez la commande à nouveau pour le configurer.',
+    limitReached: 'Vous avez atteint la limite de 2 préréglages par utilisateur. Supprimez-en un pour en créer un autre.',
+    deleted: 'Vos préréglages de salons temporaires ont été supprimés.',
+    willBeLocked: 'Vos salons temporaires seront désormais verrouillés automatiquement.',
+    willBeHidden: 'Vos salons temporaires seront désormais masqués automatiquement.',
+    embedTitle: 'Configuration par Défaut des Salons Temporaires',
+    embedChannelName: 'Nom du Salon',
+    embedLock: 'Salon Verrouillé',
+    embedHide: 'Salon Masqué',
+    embedMembers: 'Membres Ajoutés',
+    embedAdmins: 'Administrateurs',
+    embedBlocked: 'Membres Bloqués',
+    embedDelete: 'Pour supprimer vos préréglages de salon, cliquez sur',
+    embedObs: 'Ces paramètres seront appliqués automatiquement chaque fois que\nvous créerez un nouveau salon temporaire sur ce serveur.',
+    whatName: 'Quel sera le nom de vos salons ?',
+    removeOrAdd: 'Cliquez sur les boutons pour ajouter ou retirer des membres.',
+    addMember: "Qui voulez-vous ajouter à vos salons temporaires ? Mentionnez ou fournissez l'ID de l'utilisateur/rôle.",
+    removeMember: "Qui voulez-vous retirer de vos salons temporaires ? Mentionnez ou fournissez l'ID de l'utilisateur/rôle."
+  }
+};

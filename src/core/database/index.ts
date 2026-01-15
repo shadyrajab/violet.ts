@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { singleton, inject } from 'tsyringe';
-import { Config } from '../config';
+import { envs } from '../config';
 import { Logger } from '../logger';
 
 import { User } from '../../modules/users/entities/User';
@@ -11,6 +11,7 @@ import { Preset } from '../../modules/presets/entities/Preset';
 import { Subscription } from '../../modules/subscriptions/entities/Subscription';
 import { UserServerSubscription } from '../../modules/subscriptions/entities/UserServerSubscription';
 
+import { CreateCoreTables1736734600000 } from '../../migrations/1736734600000-CreateCoreTables';
 import { CreateMigrationsTable1736734700000 } from '../../migrations/1736734700000-CreateMigrationsTable';
 import { CreateVoiceProfiles1736734800000 } from '../../migrations/1736734800000-CreateVoiceProfiles';
 import { SeedDefaultSubscription1736734900000 } from '../../migrations/1736734900000-SeedDefaultSubscription';
@@ -20,7 +21,6 @@ export class Database {
   private dataSource!: DataSource;
 
   constructor(
-    @inject(Config) private config: Config,
     @inject(Logger) private logger: Logger
   ) {}
 
@@ -28,11 +28,11 @@ export class Database {
     try {
       this.dataSource = new DataSource({
         type: 'postgres',
-        host: this.config.database.host,
-        port: this.config.database.port,
-        database: this.config.database.database,
-        username: this.config.database.user,
-        password: this.config.database.password,
+        host: envs.DB_HOST || 'localhost',
+        port: parseInt(envs.DB_PORT || '5432', 10),
+        database: envs.DB_NAME || 'violet',
+        username: envs.DB_USER || 'postgres',
+        password: envs.DB_PASSWORD || '',
         entities: [
           User,
           Server,
@@ -43,13 +43,14 @@ export class Database {
           UserServerSubscription
         ],
         migrations: [
+          CreateCoreTables1736734600000,
           CreateMigrationsTable1736734700000,
           CreateVoiceProfiles1736734800000,
           SeedDefaultSubscription1736734900000
         ],
         migrationsRun: true,
         synchronize: false,
-        logging: this.config.app.environment === 'development',
+        logging: envs.NODE_ENV === 'development',
         maxQueryExecutionTime: 1000
       });
 

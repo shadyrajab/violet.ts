@@ -1,5 +1,5 @@
-import { singleton, inject } from 'tsyringe';
-import { Config } from '../config';
+import { singleton } from 'tsyringe';
+import { envs } from '../config';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -11,10 +11,6 @@ export class Logger {
     warn: 2,
     error: 3
   };
-
-  constructor(
-    @inject(Config) private config: Config
-  ) {}
 
   debug(message: string, meta?: Record<string, unknown>): void {
     this.log('debug', message, meta);
@@ -33,7 +29,7 @@ export class Logger {
   }
 
   private log(level: LogLevel, message: string, meta?: Record<string, unknown>): void {
-    const configLevel = this.config.app.logLevel;
+    const configLevel = (envs.LOG_LEVEL || 'info') as LogLevel;
 
     if (this.levels[level] < this.levels[configLevel]) {
       return;

@@ -1,0 +1,131 @@
+import { TranslationSchema } from '../types';
+
+export const pl: TranslationSchema = {
+  common: {
+    yes: 'Tak',
+    no: 'Nie',
+    none: 'Brak',
+    error: 'Błąd',
+    success: 'Sukces',
+    loading: 'Ładowanie...',
+    cancel: 'Anuluj',
+    confirm: 'Potwierdź',
+    delete: 'Usuń',
+    save: 'Zapisz',
+    edit: 'Edytuj',
+    add: 'Dodaj',
+    remove: 'Usuń',
+    back: 'Wstecz',
+    next: 'Dalej',
+    previous: 'Poprzedni',
+    close: 'Zamknij',
+    more: 'więcej'
+  },
+  errors: {
+    generic: 'Wystąpił błąd podczas przetwarzania Twojego żądania.',
+    userNotFound: 'Nie można znaleźć użytkownika **{username}**.',
+    memberNotFound: 'Jeden z określonych użytkowników nie został znaleziony. Upewnij się, że ID lub nazwa użytkownika jest poprawna.',
+    dataNotFound: 'Nie znaleziono danych dla tego użytkownika.',
+    permissionsRemoved: 'Moje wymagane uprawnienia zostały usunięte. Proszę nadaj mi uprawnienie `Administrator`, aby wykonać tę akcję.',
+    onlyGuilds: 'Ta komenda jest dostępna tylko na serwerach.',
+    unavailableCommand: 'Ta komenda jest tymczasowo niedostępna.',
+    needPermission: 'Potrzebujesz uprawnienia `{permission}`, aby użyć tej komendy.',
+    notAdmin: 'Musisz być administratorem lub właścicielem kanału, aby użyć tej komendy.',
+    notOwner: 'Tylko właściciel kanału może użyć tej komendy.',
+    notConnected: 'Nie jesteś połączony z kanałem tymczasowym.',
+    simultaneousChannelLimit: 'Możesz utworzyć tylko `2` jednoczesne kanały.',
+    characterLimitReached: 'Nazwa kanału nie może przekraczać **{limit}** znaków.'
+  },
+  voice: {
+    channel: {
+      locked: 'Zablokowany',
+      unlocked: 'Odblokowany',
+      hidden: 'Ukryty',
+      visible: 'Widoczny',
+      renamed: 'Zmieniono nazwę'
+    },
+    controlPanel: {
+      title: 'Panel Sterowania Kanałem Głosowym',
+      channelLabel: 'Kanał',
+      ownerLabel: 'Właściciel',
+      statusLabel: 'Status Kanału',
+      adminsLabel: 'Admini',
+      allowedMembersLabel: 'Dozwoleni Członkowie',
+      blockedMembersLabel: 'Zablokowani Członkowie',
+      quickActionsLabel: 'Szybkie Akcje',
+      quickActionsValue: 'Użyj przycisków poniżej, aby zarządzać swoim kanałem',
+      footer: 'Violet Bot'
+    },
+    buttons: {
+      lock: 'Zablokuj',
+      unlock: 'Odblokuj',
+      hide: 'Ukryj',
+      unhide: 'Pokaż',
+      rename: 'Zmień nazwę',
+      invite: 'Zaproś',
+      kick: 'Wyrzuć',
+      setAdmin: 'Ustaw Admina'
+    },
+    modals: {
+      renameTitle: 'Zmień Nazwę Kanału Głosowego',
+      renameLabel: 'Nowa Nazwa Kanału',
+      renamePlaceholder: 'Wpisz nową nazwę kanału',
+      inviteTitle: 'Zaproś Członka',
+      inviteLabel: 'ID, nazwa użytkownika lub @wzmianka',
+      invitePlaceholder: 'Wpisz ID, nazwę użytkownika lub @wzmiankę',
+      kickTitle: 'Wyrzuć Członka',
+      kickLabel: 'ID, nazwa użytkownika lub @wzmianka',
+      kickPlaceholder: 'Wpisz ID, nazwę użytkownika lub @wzmiankę',
+      setAdminTitle: 'Ustaw Admina',
+      setAdminLabel: 'ID, nazwa użytkownika lub @wzmianka',
+      setAdminPlaceholder: 'Wpisz ID, nazwę użytkownika lub @wzmiankę'
+    },
+    messages: {
+      channelLocked: 'Kanał został zablokowany.',
+      channelUnlocked: 'Kanał został odblokowany.',
+      channelHidden: 'Kanał został ukryty z listy kanałów.',
+      channelVisible: 'Kanał jest teraz widoczny na liście kanałów.',
+      channelRenamed: 'Zmieniono nazwę kanału na **{name}**.',
+      memberInvited: '**{username}** został zaproszony do kanału.',
+      memberKicked: '**{username}** został wyrzucony z kanału.',
+      adminAdded: '**{username}** został ustawiony jako admin.',
+      adminRemoved: '**{username}** został usunięty z adminów.',
+      memberAdded: 'Dodałeś {members} do swojego kanału. Użyj **/remove**, aby ich usunąć.',
+      memberRemoved: 'Usunąłeś {members} ze swojego kanału.',
+      memberBlocked: 'Zablokowałeś {members} na swoim kanale. Użyj **/unblock**, aby ich odblokować.',
+      memberUnblocked: 'Odblokowałeś {members} na swoim kanale.',
+      cannotKickOwner: 'Nie możesz wyrzucić właściciela kanału.',
+      userNotFoundInChannel: 'Nie można znaleźć określonego użytkownika na tym kanale.'
+    }
+  },
+  setup: {
+    activated: 'System tymczasowych kanałów aktywowany pomyślnie!',
+    alreadyActivated: 'System tymczasowych kanałów jest już aktywowany.',
+    disabled: 'System tymczasowych kanałów dezaktywowany pomyślnie!',
+    alreadyDisabled: 'System tymczasowych kanałów jest już dezaktywowany.',
+    joinChannelName: 'Dołącz tutaj',
+    memberJoined: '{username} dołączył do kanału',
+    memberLeft: '{username} opuścił kanał'
+  },
+  presets: {
+    notFound: 'Nie masz jeszcze domyślnego profilu konfiguracji dla tymczasowych kanałów na tym serwerze. Kliknij przycisk poniżej, aby utworzyć:',
+    created: 'Twój profil konfiguracji został pomyślnie utworzony. Użyj komendy ponownie, aby go skonfigurować.',
+    limitReached: 'Osiągnąłeś limit 2 presetów na użytkownika. Usuń jeden, aby utworzyć nowy.',
+    deleted: 'Twoje presety tymczasowych kanałów zostały usunięte.',
+    willBeLocked: 'Twoje tymczasowe kanały będą teraz automatycznie blokowane.',
+    willBeHidden: 'Twoje tymczasowe kanały będą teraz automatycznie ukrywane.',
+    embedTitle: 'Domyślna Konfiguracja Tymczasowych Kanałów',
+    embedChannelName: 'Nazwa Kanału',
+    embedLock: 'Kanał Zablokowany',
+    embedHide: 'Kanał Ukryty',
+    embedMembers: 'Dodani Członkowie',
+    embedAdmins: 'Administratorzy',
+    embedBlocked: 'Zablokowani Członkowie',
+    embedDelete: 'Aby usunąć presety kanałów, kliknij',
+    embedObs: 'Te ustawienia będą automatycznie stosowane za każdym razem,\ngdy utworzysz nowy tymczasowy kanał na tym serwerze.',
+    whatName: 'Jak będą nazywać się Twoje kanały?',
+    removeOrAdd: 'Kliknij przyciski, aby dodać lub usunąć członków.',
+    addMember: 'Kogo chcesz dodać do swoich tymczasowych kanałów? Wspomnij lub podaj ID użytkownika/roli.',
+    removeMember: 'Kogo chcesz usunąć ze swoich tymczasowych kanałów? Wspomnij lub podaj ID użytkownika/roli.'
+  }
+};

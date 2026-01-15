@@ -1,33 +1,19 @@
-export type Language = 'english' | 'portuguese' | 'spanish' | 'korean' | 'japanese';
+import { Locale } from '../i18n';
 
-export interface IConfig {
-  discord: {
-    token: string;
-    clientId: string;
-  };
-  database: {
-    host: string;
-    port: number;
-    database: string;
-    user: string;
-    password: string;
-  };
-  app: {
-    environment: 'development' | 'production';
-    logLevel: 'debug' | 'info' | 'warn' | 'error';
-  };
-}
+export type { Locale } from '../i18n';
+
+export type Language = Locale;
 
 export interface IGuildSettings {
   serverId: string;
-  language: Language;
+  language: Locale;
   categoryId: string | null;
   channelId: string | null;
 }
 
 export interface IUserProfile {
   userId: string;
-  language: Language;
+  language: Locale;
 }
 
 export interface IVoiceRoom {

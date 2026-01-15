@@ -1,0 +1,131 @@
+import { TranslationSchema } from '../types';
+
+export const it: TranslationSchema = {
+  common: {
+    yes: 'Sì',
+    no: 'No',
+    none: 'Nessuno',
+    error: 'Errore',
+    success: 'Successo',
+    loading: 'Caricamento...',
+    cancel: 'Annulla',
+    confirm: 'Conferma',
+    delete: 'Elimina',
+    save: 'Salva',
+    edit: 'Modifica',
+    add: 'Aggiungi',
+    remove: 'Rimuovi',
+    back: 'Indietro',
+    next: 'Avanti',
+    previous: 'Precedente',
+    close: 'Chiudi',
+    more: 'altri'
+  },
+  errors: {
+    generic: "Si è verificato un errore durante l'elaborazione della tua richiesta.",
+    userNotFound: "Impossibile trovare l'utente **{username}**.",
+    memberNotFound: "Uno degli utenti specificati non è stato trovato. Assicurati che l'ID o il nome utente sia corretto.",
+    dataNotFound: 'Nessun dato trovato per questo utente.',
+    permissionsRemoved: 'I miei permessi necessari sono stati rimossi. Per favore, concedimi il permesso `Amministratore` per eseguire questa azione.',
+    onlyGuilds: 'Questo comando è disponibile solo nei server.',
+    unavailableCommand: 'Questo comando è temporaneamente non disponibile.',
+    needPermission: 'Hai bisogno del permesso `{permission}` per usare questo comando.',
+    notAdmin: 'Devi essere amministratore o proprietario del canale per usare questo comando.',
+    notOwner: 'Solo il proprietario del canale può usare questo comando.',
+    notConnected: 'Non sei connesso a un canale temporaneo.',
+    simultaneousChannelLimit: 'Puoi creare solo `2` canali simultanei.',
+    characterLimitReached: 'Il nome del canale non può superare **{limit}** caratteri.'
+  },
+  voice: {
+    channel: {
+      locked: 'Bloccato',
+      unlocked: 'Sbloccato',
+      hidden: 'Nascosto',
+      visible: 'Visibile',
+      renamed: 'Rinominato'
+    },
+    controlPanel: {
+      title: 'Pannello di Controllo del Canale Vocale',
+      channelLabel: 'Canale',
+      ownerLabel: 'Proprietario',
+      statusLabel: 'Stato del Canale',
+      adminsLabel: 'Admin',
+      allowedMembersLabel: 'Membri Autorizzati',
+      blockedMembersLabel: 'Membri Bloccati',
+      quickActionsLabel: 'Azioni Rapide',
+      quickActionsValue: 'Usa i pulsanti qui sotto per gestire il tuo canale',
+      footer: 'Violet Bot'
+    },
+    buttons: {
+      lock: 'Blocca',
+      unlock: 'Sblocca',
+      hide: 'Nascondi',
+      unhide: 'Mostra',
+      rename: 'Rinomina',
+      invite: 'Invita',
+      kick: 'Espelli',
+      setAdmin: 'Imposta Admin'
+    },
+    modals: {
+      renameTitle: 'Rinomina Canale Vocale',
+      renameLabel: 'Nuovo Nome del Canale',
+      renamePlaceholder: 'Inserisci il nuovo nome del canale',
+      inviteTitle: 'Invita Membro',
+      inviteLabel: 'ID, nome utente o @menzione',
+      invitePlaceholder: 'Inserisci ID, nome utente o @menzione',
+      kickTitle: 'Espelli Membro',
+      kickLabel: 'ID, nome utente o @menzione',
+      kickPlaceholder: 'Inserisci ID, nome utente o @menzione',
+      setAdminTitle: 'Imposta Admin',
+      setAdminLabel: 'ID, nome utente o @menzione',
+      setAdminPlaceholder: 'Inserisci ID, nome utente o @menzione'
+    },
+    messages: {
+      channelLocked: 'Il canale è stato bloccato.',
+      channelUnlocked: 'Il canale è stato sbloccato.',
+      channelHidden: 'Il canale è stato nascosto dalla lista dei canali.',
+      channelVisible: 'Il canale è ora visibile nella lista dei canali.',
+      channelRenamed: 'Canale rinominato in **{name}**.',
+      memberInvited: '**{username}** è stato invitato al canale.',
+      memberKicked: '**{username}** è stato espulso dal canale.',
+      adminAdded: '**{username}** è stato impostato come admin.',
+      adminRemoved: '**{username}** è stato rimosso dagli admin.',
+      memberAdded: 'Hai aggiunto {members} al tuo canale. Usa **/remove** per rimuoverli.',
+      memberRemoved: 'Hai rimosso {members} dal tuo canale.',
+      memberBlocked: 'Hai bloccato {members} dal tuo canale. Usa **/unblock** per sbloccarli.',
+      memberUnblocked: 'Hai sbloccato {members} dal tuo canale.',
+      cannotKickOwner: 'Non puoi espellere il proprietario del canale.',
+      userNotFoundInChannel: "Impossibile trovare l'utente specificato in questo canale."
+    }
+  },
+  setup: {
+    activated: 'Sistema di stanze temporanee attivato con successo!',
+    alreadyActivated: 'Il sistema di stanze temporanee è già attivato.',
+    disabled: 'Sistema di stanze temporanee disattivato con successo!',
+    alreadyDisabled: 'Il sistema di stanze temporanee è già disattivato.',
+    joinChannelName: 'Entra qui',
+    memberJoined: '{username} è entrato nel canale',
+    memberLeft: '{username} ha lasciato il canale'
+  },
+  presets: {
+    notFound: 'Non hai ancora un profilo di configurazione predefinito per le stanze temporanee su questo server. Clicca il pulsante qui sotto per crearne uno:',
+    created: 'Il tuo profilo di configurazione è stato creato con successo. Usa il comando di nuovo per configurarlo.',
+    limitReached: 'Hai raggiunto il limite di 2 preset per utente. Eliminane uno per crearne un altro.',
+    deleted: 'I tuoi preset di stanze temporanee sono stati eliminati.',
+    willBeLocked: 'Le tue stanze temporanee verranno ora bloccate automaticamente.',
+    willBeHidden: 'Le tue stanze temporanee verranno ora nascoste automaticamente.',
+    embedTitle: 'Configurazione Predefinita dei Canali Temporanei',
+    embedChannelName: 'Nome del Canale',
+    embedLock: 'Canale Bloccato',
+    embedHide: 'Canale Nascosto',
+    embedMembers: 'Membri Aggiunti',
+    embedAdmins: 'Amministratori',
+    embedBlocked: 'Membri Bloccati',
+    embedDelete: 'Per eliminare i tuoi preset di canale, clicca su',
+    embedObs: 'Queste impostazioni verranno applicate automaticamente ogni volta che\ncrei una nuova stanza temporanea su questo server.',
+    whatName: 'Quale sarà il nome delle tue stanze?',
+    removeOrAdd: 'Clicca sui pulsanti per aggiungere o rimuovere membri.',
+    addMember: "Chi vuoi aggiungere alle tue stanze temporanee? Menziona o fornisci l'ID dell'utente/ruolo.",
+    removeMember: "Chi vuoi rimuovere dalle tue stanze temporanee? Menziona o fornisci l'ID dell'utente/ruolo."
+  }
+};

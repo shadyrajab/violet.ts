@@ -10,6 +10,7 @@ import { VoicePermissionService } from './VoicePermissionService';
 import { VoiceRoom } from '../entities/VoiceRoom';
 import { Logger } from '../../../core/logger';
 import { embedBuilder } from '../../../shared/embeds/EmbedBuilder';
+import { Locale, t } from '../../../core/i18n';
 
 @singleton()
 export class VoiceChannelManagementService {
@@ -18,7 +19,7 @@ export class VoiceChannelManagementService {
     @inject(Logger) private logger: Logger
   ) {}
 
-  async sendManagementEmbed(channel: VoiceChannel, ownerId: string, room?: VoiceRoom): Promise<Message | null> {
+  async sendManagementEmbed(channel: VoiceChannel, ownerId: string, room?: VoiceRoom, locale: Locale = 'en'): Promise<Message | null> {
     try {
       const isLocked = this.voicePermissionService.isChannelLocked(channel);
       const isHidden = this.voicePermissionService.isChannelHidden(channel);
@@ -30,27 +31,27 @@ export class VoiceChannelManagementService {
         adminIds: room?.adminIds || [],
         allowedMembers,
         blockedMembers
-      });
+      }, locale);
 
       const row1 = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
           .setCustomId('vc_lock')
-          .setLabel('Lock')
+          .setLabel(t('voice.buttons.lock', undefined, locale))
           .setEmoji('🔒')
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
           .setCustomId('vc_unlock')
-          .setLabel('Unlock')
+          .setLabel(t('voice.buttons.unlock', undefined, locale))
           .setEmoji('🔓')
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
           .setCustomId('vc_hide')
-          .setLabel('Hide')
+          .setLabel(t('voice.buttons.hide', undefined, locale))
           .setEmoji('🙈')
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
           .setCustomId('vc_unhide')
-          .setLabel('Unhide')
+          .setLabel(t('voice.buttons.unhide', undefined, locale))
           .setEmoji('👁')
           .setStyle(ButtonStyle.Secondary)
       );
@@ -58,19 +59,24 @@ export class VoiceChannelManagementService {
       const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
           .setCustomId('vc_rename')
-          .setLabel('Rename')
+          .setLabel(t('voice.buttons.rename', undefined, locale))
           .setEmoji('✏️')
           .setStyle(ButtonStyle.Primary),
         new ButtonBuilder()
           .setCustomId('vc_invite')
-          .setLabel('Invite')
+          .setLabel(t('voice.buttons.invite', undefined, locale))
           .setEmoji('➕')
           .setStyle(ButtonStyle.Success),
         new ButtonBuilder()
           .setCustomId('vc_kick')
-          .setLabel('Kick')
+          .setLabel(t('voice.buttons.kick', undefined, locale))
           .setEmoji('👢')
-          .setStyle(ButtonStyle.Danger)
+          .setStyle(ButtonStyle.Danger),
+        new ButtonBuilder()
+          .setCustomId('vc_setadmin')
+          .setLabel(t('voice.buttons.setAdmin', undefined, locale))
+          .setEmoji('👑')
+          .setStyle(ButtonStyle.Secondary)
       );
 
       const message = await channel.send({
@@ -86,7 +92,7 @@ export class VoiceChannelManagementService {
     }
   }
 
-  async updateManagementEmbed(message: Message, channelName: string, ownerId: string, room?: VoiceRoom): Promise<void> {
+  async updateManagementEmbed(message: Message, channelName: string, ownerId: string, room?: VoiceRoom, locale: Locale = 'en'): Promise<void> {
     try {
       if (!message.channel || message.channel.type !== 2) {
         this.logger.warn('Cannot update embed: channel not found or not voice channel');
@@ -104,7 +110,7 @@ export class VoiceChannelManagementService {
         adminIds: room?.adminIds || [],
         allowedMembers,
         blockedMembers
-      });
+      }, locale);
 
       await message.edit({ embeds: [embed] });
 

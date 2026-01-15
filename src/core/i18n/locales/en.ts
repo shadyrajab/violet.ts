@@ -1,0 +1,131 @@
+import { TranslationSchema } from '../types';
+
+export const en: TranslationSchema = {
+  common: {
+    yes: 'Yes',
+    no: 'No',
+    none: 'None',
+    error: 'Error',
+    success: 'Success',
+    loading: 'Loading...',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    delete: 'Delete',
+    save: 'Save',
+    edit: 'Edit',
+    add: 'Add',
+    remove: 'Remove',
+    back: 'Back',
+    next: 'Next',
+    previous: 'Previous',
+    close: 'Close',
+    more: 'more'
+  },
+  errors: {
+    generic: 'An error occurred while processing your request.',
+    userNotFound: 'Could not find the user **{username}**.',
+    memberNotFound: 'One of the specified users was not found. Make sure the ID or username is correct.',
+    dataNotFound: 'No data found for this user.',
+    permissionsRemoved: 'My required permissions have been removed. Please grant me `Administrator` permission to perform this action.',
+    onlyGuilds: 'This command is only available in servers.',
+    unavailableCommand: 'This command is temporarily unavailable.',
+    needPermission: 'You need the `{permission}` permission to use this command.',
+    notAdmin: 'You need to be an administrator or owner of the channel to use this command.',
+    notOwner: 'Only the channel owner can use this command.',
+    notConnected: 'You are not connected to a temporary channel.',
+    simultaneousChannelLimit: 'You can only create up to `2` simultaneous channels.',
+    characterLimitReached: 'The channel name cannot exceed **{limit}** characters.'
+  },
+  voice: {
+    channel: {
+      locked: 'Locked',
+      unlocked: 'Unlocked',
+      hidden: 'Hidden',
+      visible: 'Visible',
+      renamed: 'Renamed'
+    },
+    controlPanel: {
+      title: 'Voice Channel Control Panel',
+      channelLabel: 'Channel',
+      ownerLabel: 'Owner',
+      statusLabel: 'Channel Status',
+      adminsLabel: 'Admins',
+      allowedMembersLabel: 'Allowed Members',
+      blockedMembersLabel: 'Blocked Members',
+      quickActionsLabel: 'Quick Actions',
+      quickActionsValue: 'Use the buttons below to manage your channel',
+      footer: 'Violet Bot'
+    },
+    buttons: {
+      lock: 'Lock',
+      unlock: 'Unlock',
+      hide: 'Hide',
+      unhide: 'Unhide',
+      rename: 'Rename',
+      invite: 'Invite',
+      kick: 'Kick',
+      setAdmin: 'Set Admin'
+    },
+    modals: {
+      renameTitle: 'Rename Voice Channel',
+      renameLabel: 'New Channel Name',
+      renamePlaceholder: 'Enter new channel name',
+      inviteTitle: 'Invite Member',
+      inviteLabel: 'User ID, Username, or @mention',
+      invitePlaceholder: 'Enter user ID, username, or @mention',
+      kickTitle: 'Kick Member',
+      kickLabel: 'User ID, Username, or @mention',
+      kickPlaceholder: 'Enter user ID, username, or @mention',
+      setAdminTitle: 'Set Admin',
+      setAdminLabel: 'User ID, Username, or @mention',
+      setAdminPlaceholder: 'Enter user ID, username, or @mention'
+    },
+    messages: {
+      channelLocked: 'The channel has been locked.',
+      channelUnlocked: 'The channel has been unlocked.',
+      channelHidden: 'The channel has been hidden from the channel list.',
+      channelVisible: 'The channel is now visible in the channel list.',
+      channelRenamed: 'Channel renamed to **{name}**.',
+      memberInvited: '**{username}** has been invited to the channel.',
+      memberKicked: '**{username}** has been kicked from the channel.',
+      adminAdded: '**{username}** has been set as admin.',
+      adminRemoved: '**{username}** has been removed as admin.',
+      memberAdded: 'You have added {members} to your channel. Use **/remove** to remove them.',
+      memberRemoved: 'You have removed {members} from your channel.',
+      memberBlocked: 'You have blocked {members} from your channel. Use **/unblock** to unblock them.',
+      memberUnblocked: 'You have unblocked {members} from your channel.',
+      cannotKickOwner: 'You cannot kick the channel owner.',
+      userNotFoundInChannel: 'Could not find the specified user in this channel.'
+    }
+  },
+  setup: {
+    activated: 'Temporary channels system activated successfully!',
+    alreadyActivated: 'The temporary channels system is already activated.',
+    disabled: 'Temporary channels system disabled successfully!',
+    alreadyDisabled: 'The temporary channels system is already disabled.',
+    joinChannelName: 'Join here',
+    memberJoined: '{username} joined the channel',
+    memberLeft: '{username} left the channel'
+  },
+  presets: {
+    notFound: "You don't have a default configuration profile for temporary channels on this server. Click the button below to create one:",
+    created: 'Your configuration profile was created successfully. Use the command again to configure it.',
+    limitReached: 'You have reached the limit of 2 presets per user. Delete one to create another.',
+    deleted: 'Your temporary channel presets have been deleted.',
+    willBeLocked: 'Your temporary channels will now be locked automatically.',
+    willBeHidden: 'Your temporary channels will now be hidden automatically.',
+    embedTitle: 'Default Temporary Channels Configuration',
+    embedChannelName: 'Channel Name',
+    embedLock: 'Channel Locked',
+    embedHide: 'Channel Hidden',
+    embedMembers: 'Added Members',
+    embedAdmins: 'Administrators',
+    embedBlocked: 'Blocked Members',
+    embedDelete: 'To delete your channel presets, click on',
+    embedObs: 'These settings will be applied automatically whenever\nyou create a new temporary channel on this server.',
+    whatName: 'What will be the name of your channels?',
+    removeOrAdd: 'Click on the buttons to add or remove members.',
+    addMember: 'Who do you want to add to your temporary channels? Mention or provide the user/role ID.',
+    removeMember: 'Who do you want to remove from your temporary channels? Mention or provide the user/role ID.'
+  }
+};

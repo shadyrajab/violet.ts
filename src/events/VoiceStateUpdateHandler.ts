@@ -9,9 +9,7 @@ import { VoicePermissionService } from '../modules/voice/services/VoicePermissio
 import { VoiceChannelManagementService } from '../modules/voice/services/VoiceChannelManagementService';
 import { UserService } from '../modules/users/services/UserService';
 import { Logger } from '../core/logger';
-import { simultaneousChannel } from '../shared/translations/temporarychannels/globalMessages';
-import { permissionsRemoved } from '../shared/translations/globalMessages';
-import { embedBuilder } from '../shared/embeds/EmbedBuilder';
+import { t, Locale, DEFAULT_LOCALE } from '../core/i18n';
 
 @injectable()
 export class VoiceStateUpdateHandler {
@@ -152,14 +150,14 @@ export class VoiceStateUpdateHandler {
         const profile = await this.voiceProfileService.getProfileByJoinChannel(channel.id);
 
         if (profile) {
-          const userLanguage = await this.userService.getUserLanguage(user.id);
-          const serverLanguage = await this.serverService.getServerLanguage(guild.id);
-          const language = userLanguage !== 'english' ? userLanguage : serverLanguage;
+          const userLocale = await this.userService.getUserLanguage(user.id);
+          const serverLocale = await this.serverService.getServerLanguage(guild.id);
+          const locale: Locale = userLocale !== DEFAULT_LOCALE ? userLocale : serverLocale;
           const canCreate = await this.voiceRoomService.canUserCreateRoom(user.id);
 
           if (!canCreate) {
             try {
-              await member.send(`${member}, ${simultaneousChannel(language)}`);
+              await member.send(`${member}, ${t('errors.simultaneousChannelLimit', undefined, locale)}`);
             } catch {}
             await member.edit({ channel: null });
             return;
@@ -216,7 +214,7 @@ export class VoiceStateUpdateHandler {
 
               if ((roomError as Error).message.includes('maximum room limit')) {
                 try {
-                  await member.send(`${member}, ${simultaneousChannel(language)}`);
+                  await member.send(`${member}, ${t('errors.simultaneousChannelLimit', undefined, locale)}`);
                 } catch {}
               }
 
@@ -225,7 +223,7 @@ export class VoiceStateUpdateHandler {
           } catch (err) {
             if (err instanceof DiscordAPIError && err.message === 'Missing Permissions') {
               try {
-                await member.send(permissionsRemoved(language));
+                await member.send(t('errors.permissionsRemoved', undefined, locale));
               } catch {}
             }
             this.logger.error('Failed to create temporary channel', err as Error, {
@@ -245,18 +243,15 @@ export class VoiceStateUpdateHandler {
         userId: user.id
       });
 
+      const serverLocale = await this.serverService.getServerLanguage(guild.id);
+
       if (newState.channelId && !joinChannelIds.includes(newState.channelId)) {
         const isRoom = await this.voiceRoomService.isRoom(newState.channelId);
 
         if (isRoom && newState.channelId !== _oldState.channelId) {
           const channel = await guild.channels.fetch(newState.channelId).catch(() => null);
           if (channel && channel.type === ChannelType.GuildVoice) {
-            await channel.send({
-              embeds: [embedBuilder.createInfoEmbed(
-                'Member Joined',
-                `**${user.username}** joined the channel`
-              )]
-            }).catch(() => {});
+            await channel.send(t('setup.memberJoined', { username: user.username }, serverLocale)).catch(() => {});
           }
         }
       }
@@ -267,12 +262,7 @@ export class VoiceStateUpdateHandler {
         if (isRoom) {
           const channel = await guild.channels.fetch(_oldState.channelId).catch(() => null);
           if (channel && channel.type === ChannelType.GuildVoice) {
-            await channel.send({
-              embeds: [embedBuilder.createInfoEmbed(
-                'Member Left',
-                `**${user.username}** left the channel`
-              )]
-            }).catch(() => {});
+            await channel.send(t('setup.memberLeft', { username: user.username }, serverLocale)).catch(() => {});
           }
         }
       }

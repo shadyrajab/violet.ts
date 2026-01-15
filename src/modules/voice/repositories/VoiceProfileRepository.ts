@@ -28,6 +28,10 @@ export class VoiceProfileRepository {
     return this.repository.count({ where: { ownerId, guildId } });
   }
 
+  async countByGuild(guildId: string): Promise<number> {
+    return this.repository.count({ where: { guildId } });
+  }
+
   async create(profile: VoiceProfile): Promise<VoiceProfile> {
     return this.repository.save(profile);
   }

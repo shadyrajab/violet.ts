@@ -1,0 +1,131 @@
+import { TranslationSchema } from '../types';
+
+export const de: TranslationSchema = {
+  common: {
+    yes: 'Ja',
+    no: 'Nein',
+    none: 'Keine',
+    error: 'Fehler',
+    success: 'Erfolg',
+    loading: 'Laden...',
+    cancel: 'Abbrechen',
+    confirm: 'Bestätigen',
+    delete: 'Löschen',
+    save: 'Speichern',
+    edit: 'Bearbeiten',
+    add: 'Hinzufügen',
+    remove: 'Entfernen',
+    back: 'Zurück',
+    next: 'Weiter',
+    previous: 'Vorherige',
+    close: 'Schließen',
+    more: 'mehr'
+  },
+  errors: {
+    generic: 'Bei der Verarbeitung deiner Anfrage ist ein Fehler aufgetreten.',
+    userNotFound: 'Der Benutzer **{username}** konnte nicht gefunden werden.',
+    memberNotFound: 'Einer der angegebenen Benutzer wurde nicht gefunden. Stelle sicher, dass die ID oder der Benutzername korrekt ist.',
+    dataNotFound: 'Keine Daten für diesen Benutzer gefunden.',
+    permissionsRemoved: 'Meine erforderlichen Berechtigungen wurden entfernt. Bitte gewähre mir die `Administrator`-Berechtigung, um diese Aktion auszuführen.',
+    onlyGuilds: 'Dieser Befehl ist nur auf Servern verfügbar.',
+    unavailableCommand: 'Dieser Befehl ist vorübergehend nicht verfügbar.',
+    needPermission: 'Du benötigst die `{permission}`-Berechtigung, um diesen Befehl zu verwenden.',
+    notAdmin: 'Du musst Administrator oder Besitzer des Kanals sein, um diesen Befehl zu verwenden.',
+    notOwner: 'Nur der Kanalbesitzer kann diesen Befehl verwenden.',
+    notConnected: 'Du bist nicht mit einem temporären Kanal verbunden.',
+    simultaneousChannelLimit: 'Du kannst nur `2` gleichzeitige Kanäle erstellen.',
+    characterLimitReached: 'Der Kanalname darf **{limit}** Zeichen nicht überschreiten.'
+  },
+  voice: {
+    channel: {
+      locked: 'Gesperrt',
+      unlocked: 'Entsperrt',
+      hidden: 'Versteckt',
+      visible: 'Sichtbar',
+      renamed: 'Umbenannt'
+    },
+    controlPanel: {
+      title: 'Sprachkanal-Kontrollzentrum',
+      channelLabel: 'Kanal',
+      ownerLabel: 'Besitzer',
+      statusLabel: 'Kanalstatus',
+      adminsLabel: 'Admins',
+      allowedMembersLabel: 'Zugelassene Mitglieder',
+      blockedMembersLabel: 'Blockierte Mitglieder',
+      quickActionsLabel: 'Schnellaktionen',
+      quickActionsValue: 'Verwende die Schaltflächen unten, um deinen Kanal zu verwalten',
+      footer: 'Violet Bot'
+    },
+    buttons: {
+      lock: 'Sperren',
+      unlock: 'Entsperren',
+      hide: 'Verstecken',
+      unhide: 'Einblenden',
+      rename: 'Umbenennen',
+      invite: 'Einladen',
+      kick: 'Rauswerfen',
+      setAdmin: 'Admin setzen'
+    },
+    modals: {
+      renameTitle: 'Sprachkanal umbenennen',
+      renameLabel: 'Neuer Kanalname',
+      renamePlaceholder: 'Neuen Kanalnamen eingeben',
+      inviteTitle: 'Mitglied einladen',
+      inviteLabel: 'ID, Benutzername oder @Erwähnung',
+      invitePlaceholder: 'ID, Benutzername oder @Erwähnung eingeben',
+      kickTitle: 'Mitglied rauswerfen',
+      kickLabel: 'ID, Benutzername oder @Erwähnung',
+      kickPlaceholder: 'ID, Benutzername oder @Erwähnung eingeben',
+      setAdminTitle: 'Admin setzen',
+      setAdminLabel: 'ID, Benutzername oder @Erwähnung',
+      setAdminPlaceholder: 'ID, Benutzername oder @Erwähnung eingeben'
+    },
+    messages: {
+      channelLocked: 'Der Kanal wurde gesperrt.',
+      channelUnlocked: 'Der Kanal wurde entsperrt.',
+      channelHidden: 'Der Kanal wurde aus der Kanalliste versteckt.',
+      channelVisible: 'Der Kanal ist jetzt in der Kanalliste sichtbar.',
+      channelRenamed: 'Kanal umbenannt in **{name}**.',
+      memberInvited: '**{username}** wurde in den Kanal eingeladen.',
+      memberKicked: '**{username}** wurde aus dem Kanal geworfen.',
+      adminAdded: '**{username}** wurde als Admin festgelegt.',
+      adminRemoved: '**{username}** wurde als Admin entfernt.',
+      memberAdded: 'Du hast {members} zu deinem Kanal hinzugefügt. Verwende **/remove**, um sie zu entfernen.',
+      memberRemoved: 'Du hast {members} aus deinem Kanal entfernt.',
+      memberBlocked: 'Du hast {members} in deinem Kanal blockiert. Verwende **/unblock**, um sie zu entsperren.',
+      memberUnblocked: 'Du hast {members} in deinem Kanal entsperrt.',
+      cannotKickOwner: 'Du kannst den Kanalbesitzer nicht rauswerfen.',
+      userNotFoundInChannel: 'Der angegebene Benutzer konnte in diesem Kanal nicht gefunden werden.'
+    }
+  },
+  setup: {
+    activated: 'Temporäres Kanalsystem erfolgreich aktiviert!',
+    alreadyActivated: 'Das temporäre Kanalsystem ist bereits aktiviert.',
+    disabled: 'Temporäres Kanalsystem erfolgreich deaktiviert!',
+    alreadyDisabled: 'Das temporäre Kanalsystem ist bereits deaktiviert.',
+    joinChannelName: 'Hier beitreten',
+    memberJoined: '{username} ist dem Kanal beigetreten',
+    memberLeft: '{username} hat den Kanal verlassen'
+  },
+  presets: {
+    notFound: 'Du hast noch kein Standardkonfigurationsprofil für temporäre Kanäle auf diesem Server. Klicke auf die Schaltfläche unten, um eines zu erstellen:',
+    created: 'Dein Konfigurationsprofil wurde erfolgreich erstellt. Verwende den Befehl erneut, um es zu konfigurieren.',
+    limitReached: 'Du hast das Limit von 2 Voreinstellungen pro Benutzer erreicht. Lösche eine, um eine neue zu erstellen.',
+    deleted: 'Deine temporären Kanalvoreinstellungen wurden gelöscht.',
+    willBeLocked: 'Deine temporären Kanäle werden jetzt automatisch gesperrt.',
+    willBeHidden: 'Deine temporären Kanäle werden jetzt automatisch versteckt.',
+    embedTitle: 'Standard-Konfiguration für temporäre Kanäle',
+    embedChannelName: 'Kanalname',
+    embedLock: 'Kanal gesperrt',
+    embedHide: 'Kanal versteckt',
+    embedMembers: 'Hinzugefügte Mitglieder',
+    embedAdmins: 'Administratoren',
+    embedBlocked: 'Blockierte Mitglieder',
+    embedDelete: 'Um deine Kanalvoreinstellungen zu löschen, klicke auf',
+    embedObs: 'Diese Einstellungen werden automatisch angewendet, wenn du\neinen neuen temporären Kanal auf diesem Server erstellst.',
+    whatName: 'Wie sollen deine Kanäle heißen?',
+    removeOrAdd: 'Klicke auf die Schaltflächen, um Mitglieder hinzuzufügen oder zu entfernen.',
+    addMember: 'Wen möchtest du zu deinen temporären Kanälen hinzufügen? Erwähne oder gib die Benutzer-/Rollen-ID an.',
+    removeMember: 'Wen möchtest du aus deinen temporären Kanälen entfernen? Erwähne oder gib die Benutzer-/Rollen-ID an.'
+  }
+};

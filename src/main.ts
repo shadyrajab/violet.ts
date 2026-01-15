@@ -1,13 +1,14 @@
+import './core/apm';
 import 'reflect-metadata';
-import { config } from 'dotenv';
 import { Client } from 'discord.js';
 import { setupContainer, container } from './core/container';
 import { Logger } from './core/logger';
-import { Config } from './core/config';
+import { envs } from './core/config';
 import { CommandHandler } from './shared/discord/CommandHandler';
 import { VoiceStateUpdateHandler } from './events/VoiceStateUpdateHandler';
 import { ChannelDeleteHandler } from './events/ChannelDeleteHandler';
 import { InteractionCreateHandler } from './events/InteractionCreateHandler';
+import { GuildCreateHandler } from './events/GuildCreateHandler';
 
 import { PresetsCommand } from './modules/presets/commands/PresetsCommand';
 import { SetupCommand } from './modules/voice/commands/SetupCommand';
@@ -24,21 +25,20 @@ import { SetAdminCommand } from './modules/voice/commands/SetAdminCommand';
 import { UnblockCommand } from './modules/voice/commands/UnblockCommand';
 import { UnhideCommand } from './modules/voice/commands/UnhideCommand';
 import { UnlockCommand } from './modules/voice/commands/UnlockCommand';
-
-config();
+import { LinkPremiumCommand } from './modules/subscriptions/commands/LinkPremiumCommand';
 
 async function bootstrap() {
   try {
     await setupContainer();
 
     const logger = container.resolve(Logger);
-    const appConfig = container.resolve(Config);
     const client = container.resolve(Client);
     const commandHandler = container.resolve(CommandHandler);
 
     const voiceStateUpdateHandler = container.resolve(VoiceStateUpdateHandler);
     const channelDeleteHandler = container.resolve(ChannelDeleteHandler);
     const interactionCreateHandler = container.resolve(InteractionCreateHandler);
+    const guildCreateHandler = container.resolve(GuildCreateHandler);
 
     const commands = [
       container.resolve(PresetsCommand),
@@ -56,6 +56,7 @@ async function bootstrap() {
       container.resolve(UnblockCommand),
       container.resolve(UnhideCommand),
       container.resolve(UnlockCommand),
+      container.resolve(LinkPremiumCommand),
     ];
 
     commandHandler.registerCommands(commands);
@@ -63,6 +64,7 @@ async function bootstrap() {
     voiceStateUpdateHandler.setup(client);
     channelDeleteHandler.setup(client);
     interactionCreateHandler.setup(client);
+    guildCreateHandler.setup(client);
 
     client.on('ready', () => {
       logger.info('Bot is ready', {
@@ -71,7 +73,7 @@ async function bootstrap() {
       });
     });
 
-    await client.login(appConfig.discord.token);
+    await client.login(envs.TOKEN);
 
     logger.info('Application started successfully');
   } catch (error) {
